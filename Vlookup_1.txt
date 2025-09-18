@@ -1,0 +1,50 @@
+Sub PerformConcatsAndLookups()
+    Dim ws As Worksheet
+    Dim lastRow As Long
+    Dim i As Long
+
+    Set ws = ThisWorkbook.Sheets("Parallel_Test_Report")
+    lastRow = ws.Cells(ws.Rows.Count, "B").End(xlUp).Row
+
+    ' Step 1: Concatenate columns
+    For i = 2 To lastRow
+        ws.Cells(i, "D").Value = ws.Cells(i, "B").Value & ws.Cells(i, "C").Value
+        ws.Cells(i, "G").Value = ws.Cells(i, "E").Value & ws.Cells(i, "F").Value
+    Next i
+
+    ' Step 2: Wait for 5 seconds
+    Application.Wait Now + TimeValue("00:00:05")
+
+    ' Step 3: VLOOKUPs
+    For i = 2 To lastRow
+        On Error Resume Next ' Skip errors if lookup fails
+
+        ws.Cells(i, "AS").Value = Application.VLookup(ws.Cells(i + 1, "G").Value, _
+            Sheets("R6_Data").Range("B:CK"), 88, False)
+
+        ws.Cells(i, "DA").Value = Application.VLookup(ws.Cells(i, "G").Value, _
+            Sheets("R6_Data").Range("B:CK"), 84, False)
+
+        ws.Cells(i, "DB").Value = Application.VLookup(ws.Cells(i, "D").Value, _
+            Sheets("RT_Data").Range("B:CK"), 84, False)
+
+        ws.Cells(i, "DC").Value = Application.VLookup(ws.Cells(i, "D").Value, _
+            Sheets("RT_Data").Range("B:CK"), 24, False)
+
+        ws.Cells(i, "DD").Value = Application.VLookup(ws.Cells(i, "D").Value, _
+            Sheets("RT_Data").Range("B:CK"), 67, False)
+
+        ws.Cells(i, "DE").Value = Application.VLookup(ws.Cells(i, "D").Value, _
+            Sheets("RT_Data").Range("B:CK"), 85, False)
+
+        ws.Cells(i, "DF").Value = Application.VLookup(ws.Cells(i, "D").Value, _
+            Sheets("RT_Data").Range("B:CK"), 86, False)
+
+        ws.Cells(i, "DG").Value = Application.VLookup(ws.Cells(i, "D").Value, _
+            Sheets("RT_Data").Range("B:CK"), 87, False)
+
+        On Error GoTo 0 ' Reset error handling
+    Next i
+
+    MsgBox "Macro completed successfully!"
+End Sub
