@@ -1,0 +1,11 @@
+=CONCAT(B2,C2) - Value to be placed in column D2
+=CONCAT(E2,F2) - Value to be placed in column G2
+After concat is done, wait for 5 seconds and then proceed with next steps
+=VLOOKUP(G3,'R6_Data'!B:CK,88,0) - Value to be placed in column AS2
+=VLOOKUP(G2,'R6_Data'!B:CK,84,0) - Value to be placed in column DA2
+=VLOOKUP(D2,RT_Data!B:CK,84,0) - Value to be placed in column DB2
+=VLOOKUP(D2,RT_Data!B:CK,24,0) - Value to be placed in column DC2
+=VLOOKUP(D2,RT_Data!B:CK,67,0) - Value to be placed in column DD2
+=VLOOKUP(D2,RT_Data!B:CK,85,0) - Value to be placed in column DE2
+=VLOOKUP(D2,RT_Data!B:CK,86,0) - Value to be placed in column DF2
+=VLOOKUP(D2,RT_Data!B:CK,87,0) - Value to be placed in column DG2
