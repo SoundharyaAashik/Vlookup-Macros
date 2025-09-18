@@ -1,0 +1,56 @@
+Sub PerformConcatsAndLookups()
+    Dim ws As Worksheet
+    Dim lastRow As Long
+    Dim i As Long
+
+    Set ws = ThisWorkbook.Sheets("Parallel_Test_Report")
+    lastRow = ws.Cells(ws.Rows.Count, "B").End(xlUp).Row
+
+    ' Step 1: Concatenate columns
+    For i = 2 To lastRow
+        ws.Cells(i, "D").Value = ws.Cells(i, "B").Value & ws.Cells(i, "C").Value
+        ws.Cells(i, "G").Value = ws.Cells(i, "E").Value & ws.Cells(i, "F").Value
+    Next i
+
+    ' Step 2: Wait for 5 seconds
+    Application.Wait Now + TimeValue("00:00:05")
+
+    ' Step 3: VLOOKUPs
+    For i = 2 To lastRow
+        On Error Resume Next ' Skip errors if lookup fails
+
+        ' R6_Data lookups
+        ws.Cells(i, "AS").Value = Application.VLookup(ws.Cells(i + 1, "G").Value, Sheets("R6_Data").Range("B:CK"), 88, False)
+        ws.Cells(i, "DA").Value = Application.VLookup(ws.Cells(i, "G").Value, Sheets("R6_Data").Range("B:CK"), 84, False)
+
+        ' RT_Data lookups
+        ws.Cells(i, "DB").Value = Application.VLookup(ws.Cells(i, "D").Value, Sheets("RT_Data").Range("B:CK"), 84, False)
+        ws.Cells(i, "DC").Value = Application.VLookup(ws.Cells(i, "D").Value, Sheets("RT_Data").Range("B:CK"), 24, False)
+        ws.Cells(i, "DD").Value = Application.VLookup(ws.Cells(i, "D").Value, Sheets("RT_Data").Range("B:CK"), 67, False)
+        ws.Cells(i, "DE").Value = Application.VLookup(ws.Cells(i, "D").Value, Sheets("RT_Data").Range("B:CK"), 85, False)
+        ws.Cells(i, "DF").Value = Application.VLookup(ws.Cells(i, "D").Value, Sheets("RT_Data").Range("B:CK"), 86, False)
+        ws.Cells(i, "DG").Value = Application.VLookup(ws.Cells(i, "D").Value, Sheets("RT_Data").Range("B:CK"), 87, False)
+
+        ' HES Response lookups
+        ws.Cells(i, "DH").Value = Application.VLookup(ws.Cells(i + 1, "G").Value, Sheets("HES Response").Range("B:CK"), 10, False)
+        ws.Cells(i, "DI").Value = Application.VLookup(ws.Cells(i + 1, "G").Value, Sheets("HES Response").Range("B:CK"), 34, False)
+        ws.Cells(i, "DJ").Value = Application.VLookup(ws.Cells(i + 1, "G").Value, Sheets("HES Response").Range("B:CK"), 38, False)
+        ws.Cells(i, "DK").Value = Application.VLookup(ws.Cells(i + 1, "G").Value, Sheets("HES Response").Range("B:CK"), 41, False)
+        ws.Cells(i, "DL").Value = Application.VLookup(ws.Cells(i + 1, "G").Value, Sheets("HES Response").Range("B:CK"), 40, False)
+        ws.Cells(i, "DM").Value = Application.VLookup(ws.Cells(i + 1, "G").Value, Sheets("HES Response").Range("B:CK"), 44, False)
+        ws.Cells(i, "DN").Value = Application.VLookup(ws.Cells(i + 1, "G").Value, Sheets("HES Response").Range("B:CK"), 45, False)
+        ws.Cells(i, "DO").Value = Application.VLookup(ws.Cells(i + 1, "G").Value, Sheets("HES Response").Range("B:CK"), 42, False)
+        ws.Cells(i, "DP").Value = Application.VLookup(ws.Cells(i + 1, "G").Value, Sheets("HES Response").Range("B:CK"), 43, False)
+        ws.Cells(i, "DQ").Value = Application.VLookup(ws.Cells(i + 1, "G").Value, Sheets("HES Response").Range("B:CK"), 47, False)
+        ws.Cells(i, "DR").Value = Application.VLookup(ws.Cells(i + 1, "G").Value, Sheets("HES Response").Range("B:CK"), 39, False)
+        ws.Cells(i, "DS").Value = Application.VLookup(ws.Cells(i + 1, "G").Value, Sheets("HES Response").Range("B:CK"), 46, False)
+        ws.Cells(i, "DT").Value = Application.VLookup(ws.Cells(i + 1, "G").Value, Sheets("HES Response").Range("B:CK"), 14, False)
+        ws.Cells(i, "DU").Value = Application.VLookup(ws.Cells(i + 1, "G").Value, Sheets("HES Response").Range("B:CK"), 15, False)
+        ws.Cells(i, "DV").Value = Application.VLookup(ws.Cells(i + 1, "G").Value, Sheets("HES Response").Range("B:CK"), 16, False)
+        ws.Cells(i, "DW").Value = Application.VLookup(ws.Cells(i + 1, "G").Value, Sheets("HES Response").Range("B:CK"), 17, False)
+
+        On Error GoTo 0 ' Reset error handling
+    Next i
+
+    MsgBox "Macro completed successfully!"
+End Sub
