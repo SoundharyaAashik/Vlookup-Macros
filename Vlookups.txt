@@ -9,3 +9,22 @@ After concat is done, wait for 5 seconds and then proceed with next steps
 =VLOOKUP(D2,RT_Data!B:CK,85,0) - Value to be placed in column DE2
 =VLOOKUP(D2,RT_Data!B:CK,86,0) - Value to be placed in column DF2
 =VLOOKUP(D2,RT_Data!B:CK,87,0) - Value to be placed in column DG2
+
+
+
+=VLOOKUP(G3,'HES Response'!B:CK,10,0) - Value to be placed in column DH2
+=VLOOKUP(G3,'HES Response'!B:CK,34,0) - Value to be placed in column DI2
+=VLOOKUP(G3,'HES Response'!B:CK,38,0) - Value to be placed in column DJ2
+=VLOOKUP(G3,'HES Response'!B:CK,41,0) - Value to be placed in column DK2
+=VLOOKUP(G3,'HES Response'!B:CK,40,0) - Value to be placed in column DL2
+=VLOOKUP(G3,'HES Response'!B:CK,44,0) - Value to be placed in column DM2
+=VLOOKUP(G3,'HES Response'!B:CK,45,0) - Value to be placed in column DN2
+=VLOOKUP(G3,'HES Response'!B:CK,42,0) - Value to be placed in column DO2
+=VLOOKUP(G3,'HES Response'!B:CK,43,0) - Value to be placed in column DP2
+=VLOOKUP(G3,'HES Response'!B:CK,47,0) - Value to be placed in column DQ2
+=VLOOKUP(G3,'HES Response'!B:CK,39,0) - Value to be placed in column DR2
+=VLOOKUP(G3,'HES Response'!B:CK,46,0) - Value to be placed in column DS2
+=VLOOKUP(G3,'HES Response'!B:CK,14,0) - Value to be placed in column DT2
+=VLOOKUP(G3,'HES Response'!B:CK,15,0) - Value to be placed in column DU2
+=VLOOKUP(G3,'HES Response'!B:CK,16,0) - Value to be placed in column DV2
+=VLOOKUP(G3,'HES Response'!B:CK,17,0) - Value to be placed in column DW2
