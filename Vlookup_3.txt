@@ -1,0 +1,71 @@
+Sub PerformLookups_AllRows()
+
+    Dim ws As Worksheet
+    Set ws = ThisWorkbook.Sheets("Parallel_Test_Report")
+
+    Dim lastRow As Long
+    lastRow = ws.Cells(ws.Rows.Count, "B").End(xlUp).Row
+
+    Dim i As Long
+    Dim result As Variant
+
+    For i = 2 To lastRow
+        ' Concatenate B & C → D
+        ws.Cells(i, "D").Value = ws.Cells(i, "B").Value & ws.Cells(i, "C").Value
+
+        ' Concatenate E & F → G
+        ws.Cells(i, "G").Value = ws.Cells(i, "E").Value & ws.Cells(i, "F").Value
+
+        ' Wait 2 seconds
+        Application.Wait (Now + TimeValue("0:00:02"))
+
+        ' --- R6_Data Lookups ---
+        result = Application.VLookup(ws.Cells(i + 1, "G").Value, Sheets("R6_Data").Range("B:CK"), 88, False)
+        If Not IsError(result) Then ws.Cells(i, "AS").Value = result Else ws.Cells(i, "AS").Value = CVErr(xlErrNA)
+
+        result = Application.VLookup(ws.Cells(i, "G").Value, Sheets("R6_Data").Range("B:CK"), 84, False)
+        If Not IsError(result) Then ws.Cells(i, "DA").Value = result Else ws.Cells(i, "DA").Value = CVErr(xlErrNA)
+
+        ' --- RT_Data Lookups ---
+        With Sheets("RT_Data")
+            result = Application.VLookup(ws.Cells(i, "D").Value, .Range("B:CK"), 84, False)
+            If Not IsError(result) Then ws.Cells(i, "DB").Value = result Else ws.Cells(i, "DB").Value = CVErr(xlErrNA)
+
+            result = Application.VLookup(ws.Cells(i, "D").Value, .Range("B:CK"), 24, False)
+            If Not IsError(result) Then ws.Cells(i, "DC").Value = result Else ws.Cells(i, "DC").Value = CVErr(xlErrNA)
+
+            result = Application.VLookup(ws.Cells(i, "D").Value, .Range("B:CK"), 67, False)
+            If Not IsError(result) Then ws.Cells(i, "DD").Value = result Else ws.Cells(i, "DD").Value = CVErr(xlErrNA)
+
+            result = Application.VLookup(ws.Cells(i, "D").Value, .Range("B:CK"), 85, False)
+            If Not IsError(result) Then ws.Cells(i, "DE").Value = result Else ws.Cells(i, "DE").Value = CVErr(xlErrNA)
+
+            result = Application.VLookup(ws.Cells(i, "D").Value, .Range("B:CK"), 86, False)
+            If Not IsError(result) Then ws.Cells(i, "DF").Value = result Else ws.Cells(i, "DF").Value = CVErr(xlErrNA)
+
+            result = Application.VLookup(ws.Cells(i, "D").Value, .Range("B:CK"), 87, False)
+            If Not IsError(result) Then ws.Cells(i, "DG").Value = result Else ws.Cells(i, "DG").Value = CVErr(xlErrNA)
+        End With
+
+        ' --- HES Response Lookups ---
+        With Sheets("HES Response")
+            Dim colArray As Variant
+            colArray = Array("DH", 10, "DI", 34, "DJ", 38, "DK", 41, "DL", 40, "DM", 44, "DN", 45, _
+                             "DO", 42, "DP", 43, "DQ", 47, "DR", 39, "DS", 46, "DT", 14, "DU", 15, _
+                             "DV", 16, "DW", 17)
+
+            Dim j As Long
+            For j = 0 To UBound(colArray) Step 2
+                result = Application.VLookup(ws.Cells(i, "D").Value, .Range("C:CI"), colArray(j + 1), False)
+                If Not IsError(result) Then
+                    ws.Cells(i, colArray(j)).Value = result
+                Else
+                    ws.Cells(i, colArray(j)).Value = CVErr(xlErrNA)
+                End If
+            Next j
+        End With
+    Next i
+
+    MsgBox "All rows processed successfully!", vbInformation
+
+End Sub
