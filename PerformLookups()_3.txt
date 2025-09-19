@@ -1,0 +1,54 @@
+Sub PerformLookups()
+
+    Dim ws As Worksheet
+    Set ws = ThisWorkbook.Sheets("Parallel_Test_Report")
+
+    ' Step 1: Concatenate B2 & C2 → D2
+    ws.Range("D2").Value = ws.Range("B2").Value & ws.Range("C2").Value
+
+    ' Step 2: Concatenate E2 & F2 → G2
+    ws.Range("G2").Value = ws.Range("E2").Value & ws.Range("F2").Value
+
+    ' Step 3: Wait for 2 seconds
+    Application.Wait (Now + TimeValue("0:00:02"))
+
+    ' Step 4: VLOOKUPs
+    On Error Resume Next
+
+    ' Lookups from R6_Data
+    ws.Range("AS2").Value = Application.WorksheetFunction.VLookup(ws.Range("G3").Value, Sheets("R6_Data").Range("B:CK"), 88, False)
+    ws.Range("DA2").Value = Application.WorksheetFunction.VLookup(ws.Range("G2").Value, Sheets("R6_Data").Range("B:CK"), 84, False)
+
+    ' Lookups from RT_Data
+    ws.Range("DB2").Value = Application.WorksheetFunction.VLookup(ws.Range("D2").Value, Sheets("RT_Data").Range("B:CK"), 84, False)
+    ws.Range("DC2").Value = Application.WorksheetFunction.VLookup(ws.Range("D2").Value, Sheets("RT_Data").Range("B:CK"), 24, False)
+    ws.Range("DD2").Value = Application.WorksheetFunction.VLookup(ws.Range("D2").Value, Sheets("RT_Data").Range("B:CK"), 67, False)
+    ws.Range("DE2").Value = Application.WorksheetFunction.VLookup(ws.Range("D2").Value, Sheets("RT_Data").Range("B:CK"), 85, False)
+    ws.Range("DF2").Value = Application.WorksheetFunction.VLookup(ws.Range("D2").Value, Sheets("RT_Data").Range("B:CK"), 86, False)
+    ws.Range("DG2").Value = Application.WorksheetFunction.VLookup(ws.Range("D2").Value, Sheets("RT_Data").Range("B:CK"), 87, False)
+
+    ' Lookups from HES Response
+    With Sheets("HES Response")
+        ws.Range("DH2").Value = Application.WorksheetFunction.VLookup(ws.Range("D2").Value, .Range("C:CI"), 10, False)
+        ws.Range("DI2").Value = Application.WorksheetFunction.VLookup(ws.Range("D2").Value, .Range("C:CI"), 34, False)
+        ws.Range("DJ2").Value = Application.WorksheetFunction.VLookup(ws.Range("D2").Value, .Range("C:CI"), 38, False)
+        ws.Range("DK2").Value = Application.WorksheetFunction.VLookup(ws.Range("D2").Value, .Range("C:CI"), 41, False)
+        ws.Range("DL2").Value = Application.WorksheetFunction.VLookup(ws.Range("D2").Value, .Range("C:CI"), 40, False)
+        ws.Range("DM2").Value = Application.WorksheetFunction.VLookup(ws.Range("D2").Value, .Range("C:CI"), 44, False)
+        ws.Range("DN2").Value = Application.WorksheetFunction.VLookup(ws.Range("D2").Value, .Range("C:CI"), 45, False)
+        ws.Range("DO2").Value = Application.WorksheetFunction.VLookup(ws.Range("D2").Value, .Range("C:CI"), 42, False)
+        ws.Range("DP2").Value = Application.WorksheetFunction.VLookup(ws.Range("D2").Value, .Range("C:CI"), 43, False)
+        ws.Range("DQ2").Value = Application.WorksheetFunction.VLookup(ws.Range("D2").Value, .Range("C:CI"), 47, False)
+        ws.Range("DR2").Value = Application.WorksheetFunction.VLookup(ws.Range("D2").Value, .Range("C:CI"), 39, False)
+        ws.Range("DS2").Value = Application.WorksheetFunction.VLookup(ws.Range("D2").Value, .Range("C:CI"), 46, False)
+        ws.Range("DT2").Value = Application.WorksheetFunction.VLookup(ws.Range("D2").Value, .Range("C:CI"), 14, False)
+        ws.Range("DU2").Value = Application.WorksheetFunction.VLookup(ws.Range("D2").Value, .Range("C:CI"), 15, False)
+        ws.Range("DV2").Value = Application.WorksheetFunction.VLookup(ws.Range("D2").Value, .Range("C:CI"), 16, False)
+        ws.Range("DW2").Value = Application.WorksheetFunction.VLookup(ws.Range("D2").Value, .Range("C:CI"), 17, False)
+    End With
+
+    On Error GoTo 0
+
+    MsgBox "All lookups and concatenations completed!", vbInformation
+
+End Sub
