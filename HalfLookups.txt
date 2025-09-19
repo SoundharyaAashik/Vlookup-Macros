@@ -1,0 +1,88 @@
+Sub PerformConcatsAndLookups()
+    Dim ws As Worksheet
+    Dim lastRow As Long
+    Dim i As Long
+    Dim result As Variant
+
+    ' Set the working sheet
+    Set ws = ThisWorkbook.Sheets("Parallel_Test_Report")
+    lastRow = ws.Cells(ws.Rows.Count, "B").End(xlUp).Row
+
+    ' Step 1: Concatenate B+C into D and E+F into G
+    For i = 2 To lastRow
+        ws.Cells(i, "D").Value = ws.Cells(i, "B").Value & ws.Cells(i, "C").Value
+        ws.Cells(i, "G").Value = ws.Cells(i, "E").Value & ws.Cells(i, "F").Value
+    Next i
+
+    ' Step 2: Wait for 2 seconds
+    Application.Wait (Now + TimeValue("0:00:02"))
+
+    ' Step 3: VLOOKUPs with error handling
+    For i = 2 To lastRow
+        ' AS2 = VLOOKUP(G3,...)
+        result = Application.VLookup(ws.Cells(i + 1, "G").Value, Sheets("R6_Data").Range("B:CK"), 88, False)
+        If IsError(result) Then
+            ws.Cells(i, "AS").Value = "Not Found"
+        Else
+            ws.Cells(i, "AS").Value = result
+        End If
+
+        ' DA2 = VLOOKUP(G2,...)
+        result = Application.VLookup(ws.Cells(i, "G").Value, Sheets("R6_Data").Range("B:CK"), 84, False)
+        If IsError(result) Then
+            ws.Cells(i, "DA").Value = "Not Found"
+        Else
+            ws.Cells(i, "DA").Value = result
+        End If
+
+        ' DB2 = VLOOKUP(D2,...)
+        result = Application.VLookup(ws.Cells(i, "D").Value, Sheets("RT_Data").Range("B:CK"), 84, False)
+        If IsError(result) Then
+            ws.Cells(i, "DB").Value = "Not Found"
+        Else
+            ws.Cells(i, "DB").Value = result
+        End If
+
+        ' DC2 = VLOOKUP(D2,...)
+        result = Application.VLookup(ws.Cells(i, "D").Value, Sheets("RT_Data").Range("B:CK"), 24, False)
+        If IsError(result) Then
+            ws.Cells(i, "DC").Value = "Not Found"
+        Else
+            ws.Cells(i, "DC").Value = result
+        End If
+
+        ' DD2 = VLOOKUP(D2,...)
+        result = Application.VLookup(ws.Cells(i, "D").Value, Sheets("RT_Data").Range("B:CK"), 67, False)
+        If IsError(result) Then
+            ws.Cells(i, "DD").Value = "Not Found"
+        Else
+            ws.Cells(i, "DD").Value = result
+        End If
+
+        ' DE2 = VLOOKUP(D2,...)
+        result = Application.VLookup(ws.Cells(i, "D").Value, Sheets("RT_Data").Range("B:CK"), 85, False)
+        If IsError(result) Then
+            ws.Cells(i, "DE").Value = "Not Found"
+        Else
+            ws.Cells(i, "DE").Value = result
+        End If
+
+        ' DF2 = VLOOKUP(D2,...)
+        result = Application.VLookup(ws.Cells(i, "D").Value, Sheets("RT_Data").Range("B:CK"), 86, False)
+        If IsError(result) Then
+            ws.Cells(i, "DF").Value = "Not Found"
+        Else
+            ws.Cells(i, "DF").Value = result
+        End If
+
+        ' DG2 = VLOOKUP(D2,...)
+        result = Application.VLookup(ws.Cells(i, "D").Value, Sheets("RT_Data").Range("B:CK"), 87, False)
+        If IsError(result) Then
+            ws.Cells(i, "DG").Value = "Not Found"
+        Else
+            ws.Cells(i, "DG").Value = result
+        End If
+    Next i
+
+    MsgBox "All operations completed successfully!"
+End Sub
