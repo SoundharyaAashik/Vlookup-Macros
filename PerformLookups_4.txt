@@ -1,0 +1,58 @@
+Sub PerformLookups_AllRows()
+
+    Dim ws As Worksheet
+    Set ws = ThisWorkbook.Sheets("Parallel_Test_Report")
+
+    Dim lastRow As Long
+    lastRow = ws.Cells(ws.Rows.Count, "B").End(xlUp).Row ' Assumes column B always has data
+
+    Dim i As Long
+    On Error Resume Next
+
+    For i = 2 To lastRow
+        ' Concatenate B & C → D
+        ws.Cells(i, "D").Value = ws.Cells(i, "B").Value & ws.Cells(i, "C").Value
+
+        ' Concatenate E & F → G
+        ws.Cells(i, "G").Value = ws.Cells(i, "E").Value & ws.Cells(i, "F").Value
+
+        ' Wait 2 seconds after each row (optional — can slow down large sheets)
+        Application.Wait (Now + TimeValue("0:00:02"))
+
+        ' VLOOKUPs from R6_Data
+        ws.Cells(i, "AS").Value = Application.WorksheetFunction.VLookup(ws.Cells(i + 1, "G").Value, Sheets("R6_Data").Range("B:CK"), 88, False)
+        ws.Cells(i, "DA").Value = Application.WorksheetFunction.VLookup(ws.Cells(i, "G").Value, Sheets("R6_Data").Range("B:CK"), 84, False)
+
+        ' VLOOKUPs from RT_Data
+        ws.Cells(i, "DB").Value = Application.WorksheetFunction.VLookup(ws.Cells(i, "D").Value, Sheets("RT_Data").Range("B:CK"), 84, False)
+        ws.Cells(i, "DC").Value = Application.WorksheetFunction.VLookup(ws.Cells(i, "D").Value, Sheets("RT_Data").Range("B:CK"), 24, False)
+        ws.Cells(i, "DD").Value = Application.WorksheetFunction.VLookup(ws.Cells(i, "D").Value, Sheets("RT_Data").Range("B:CK"), 67, False)
+        ws.Cells(i, "DE").Value = Application.WorksheetFunction.VLookup(ws.Cells(i, "D").Value, Sheets("RT_Data").Range("B:CK"), 85, False)
+        ws.Cells(i, "DF").Value = Application.WorksheetFunction.VLookup(ws.Cells(i, "D").Value, Sheets("RT_Data").Range("B:CK"), 86, False)
+        ws.Cells(i, "DG").Value = Application.WorksheetFunction.VLookup(ws.Cells(i, "D").Value, Sheets("RT_Data").Range("B:CK"), 87, False)
+
+        ' VLOOKUPs from HES Response
+        With Sheets("HES Response")
+            ws.Cells(i, "DH").Value = Application.WorksheetFunction.VLookup(ws.Cells(i, "D").Value, .Range("C:CI"), 10, False)
+            ws.Cells(i, "DI").Value = Application.WorksheetFunction.VLookup(ws.Cells(i, "D").Value, .Range("C:CI"), 34, False)
+            ws.Cells(i, "DJ").Value = Application.WorksheetFunction.VLookup(ws.Cells(i, "D").Value, .Range("C:CI"), 38, False)
+            ws.Cells(i, "DK").Value = Application.WorksheetFunction.VLookup(ws.Cells(i, "D").Value, .Range("C:CI"), 41, False)
+            ws.Cells(i, "DL").Value = Application.WorksheetFunction.VLookup(ws.Cells(i, "D").Value, .Range("C:CI"), 40, False)
+            ws.Cells(i, "DM").Value = Application.WorksheetFunction.VLookup(ws.Cells(i, "D").Value, .Range("C:CI"), 44, False)
+            ws.Cells(i, "DN").Value = Application.WorksheetFunction.VLookup(ws.Cells(i, "D").Value, .Range("C:CI"), 45, False)
+            ws.Cells(i, "DO").Value = Application.WorksheetFunction.VLookup(ws.Cells(i, "D").Value, .Range("C:CI"), 42, False)
+            ws.Cells(i, "DP").Value = Application.WorksheetFunction.VLookup(ws.Cells(i, "D").Value, .Range("C:CI"), 43, False)
+            ws.Cells(i, "DQ").Value = Application.WorksheetFunction.VLookup(ws.Cells(i, "D").Value, .Range("C:CI"), 47, False)
+            ws.Cells(i, "DR").Value = Application.WorksheetFunction.VLookup(ws.Cells(i, "D").Value, .Range("C:CI"), 39, False)
+            ws.Cells(i, "DS").Value = Application.WorksheetFunction.VLookup(ws.Cells(i, "D").Value, .Range("C:CI"), 46, False)
+            ws.Cells(i, "DT").Value = Application.WorksheetFunction.VLookup(ws.Cells(i, "D").Value, .Range("C:CI"), 14, False)
+            ws.Cells(i, "DU").Value = Application.WorksheetFunction.VLookup(ws.Cells(i, "D").Value, .Range("C:CI"), 15, False)
+            ws.Cells(i, "DV").Value = Application.WorksheetFunction.VLookup(ws.Cells(i, "D").Value, .Range("C:CI"), 16, False)
+            ws.Cells(i, "DW").Value = Application.WorksheetFunction.VLookup(ws.Cells(i, "D").Value, .Range("C:CI"), 17, False)
+        End With
+    Next i
+
+    On Error GoTo 0
+    MsgBox "All rows processed successfully!", vbInformation
+
+End Sub
