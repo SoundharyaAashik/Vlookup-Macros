@@ -1,0 +1,104 @@
+Sub PerformLookups_AllRows()
+
+    Dim ws As Worksheet
+    Set ws = ThisWorkbook.Sheets("Parallel_Test_Report")
+
+    Dim lastRow As Long
+    lastRow = ws.Cells(ws.Rows.Count, "B").End(xlUp).Row
+
+    Dim i As Long
+    Dim result As Variant
+
+    For i = 2 To lastRow
+        ' Concatenate B & C → D
+        ws.Cells(i, "D").Value = ws.Cells(i, "B").Value & ws.Cells(i, "C").Value
+
+        ' Concatenate E & F → G
+        ws.Cells(i, "G").Value = ws.Cells(i, "E").Value & ws.Cells(i, "F").Value
+
+        ' Wait 2 seconds
+        Application.Wait (Now + TimeValue("0:00:02"))
+
+        ' --- R6_Data Lookups ---
+        result = Application.VLookup(ws.Cells(i + 1, "G").Value, Sheets("R6_Data").Range("B:CK"), 88, False)
+        If result = 0 Then ws.Cells(i, "AS").Value = "0" Else ws.Cells(i, "AS").Value = result
+
+        result = Application.VLookup(ws.Cells(i, "G").Value, Sheets("R6_Data").Range("B:CK"), 84, False)
+        If result = 0 Then ws.Cells(i, "DA").Value = "0" Else ws.Cells(i, "DA").Value = result
+
+        ' --- RT_Data Lookups ---
+        With Sheets("RT_Data")
+            result = Application.VLookup(ws.Cells(i, "D").Value, .Range("B:CK"), 84, False)
+            If result = 0 Then ws.Cells(i, "DB").Value = "0" Else ws.Cells(i, "DB").Value = result
+
+            result = Application.VLookup(ws.Cells(i, "D").Value, .Range("B:CK"), 24, False)
+            If result = 0 Then ws.Cells(i, "DC").Value = "0" Else ws.Cells(i, "DC").Value = result
+
+            result = Application.VLookup(ws.Cells(i, "D").Value, .Range("B:CK"), 67, False)
+            If result = 0 Then ws.Cells(i, "DD").Value = "0" Else ws.Cells(i, "DD").Value = result
+
+            result = Application.VLookup(ws.Cells(i, "D").Value, .Range("B:CK"), 85, False)
+            If result = 0 Then ws.Cells(i, "DE").Value = "0" Else ws.Cells(i, "DE").Value = result
+
+            result = Application.VLookup(ws.Cells(i, "D").Value, .Range("B:CK"), 86, False)
+            If result = 0 Then ws.Cells(i, "DF").Value = "0" Else ws.Cells(i, "DF").Value = result
+
+            result = Application.VLookup(ws.Cells(i, "D").Value, .Range("B:CK"), 87, False)
+            If result = 0 Then ws.Cells(i, "DG").Value = "0" Else ws.Cells(i, "DG").Value = result
+        End With
+
+        ' --- HES Response Lookups ---
+        With Sheets("HES Response")
+            result = Application.VLookup(ws.Cells(i, "D").Value, .Range("C:CI"), 10, False)
+            If result = 0 Then ws.Cells(i, "DH").Value = "0" Else ws.Cells(i, "DH").Value = result
+
+            result = Application.VLookup(ws.Cells(i, "D").Value, .Range("C:CI"), 34, False)
+            If result = 0 Then ws.Cells(i, "DI").Value = "0" Else ws.Cells(i, "DI").Value = result
+
+            result = Application.VLookup(ws.Cells(i, "D").Value, .Range("C:CI"), 38, False)
+            If result = 0 Then ws.Cells(i, "DJ").Value = "0" Else ws.Cells(i, "DJ").Value = result
+
+            result = Application.VLookup(ws.Cells(i, "D").Value, .Range("C:CI"), 41, False)
+            If result = 0 Then ws.Cells(i, "DK").Value = "0" Else ws.Cells(i, "DK").Value = result
+
+            result = Application.VLookup(ws.Cells(i, "D").Value, .Range("C:CI"), 40, False)
+            If result = 0 Then ws.Cells(i, "DL").Value = "0" Else ws.Cells(i, "DL").Value = result
+
+            result = Application.VLookup(ws.Cells(i, "D").Value, .Range("C:CI"), 44, False)
+            If result = 0 Then ws.Cells(i, "DM").Value = "0" Else ws.Cells(i, "DM").Value = result
+
+            result = Application.VLookup(ws.Cells(i, "D").Value, .Range("C:CI"), 45, False)
+            If result = 0 Then ws.Cells(i, "DN").Value = "0" Else ws.Cells(i, "DN").Value = result
+
+            result = Application.VLookup(ws.Cells(i, "D").Value, .Range("C:CI"), 42, False)
+            If result = 0 Then ws.Cells(i, "DO").Value = "0" Else ws.Cells(i, "DO").Value = result
+
+            result = Application.VLookup(ws.Cells(i, "D").Value, .Range("C:CI"), 43, False)
+            If result = 0 Then ws.Cells(i, "DP").Value = "0" Else ws.Cells(i, "DP").Value = result
+
+            result = Application.VLookup(ws.Cells(i, "D").Value, .Range("C:CI"), 47, False)
+            If result = 0 Then ws.Cells(i, "DQ").Value = "0" Else ws.Cells(i, "DQ").Value = result
+
+            result = Application.VLookup(ws.Cells(i, "D").Value, .Range("C:CI"), 39, False)
+            If result = 0 Then ws.Cells(i, "DR").Value = "0" Else ws.Cells(i, "DR").Value = result
+
+            result = Application.VLookup(ws.Cells(i, "D").Value, .Range("C:CI"), 46, False)
+            If result = 0 Then ws.Cells(i, "DS").Value = "0" Else ws.Cells(i, "DS").Value = result
+
+            result = Application.VLookup(ws.Cells(i, "D").Value, .Range("C:CI"), 14, False)
+            If result = 0 Then ws.Cells(i, "DT").Value = "0" Else ws.Cells(i, "DT").Value = result
+
+            result = Application.VLookup(ws.Cells(i, "D").Value, .Range("C:CI"), 15, False)
+            If result = 0 Then ws.Cells(i, "DU").Value = "0" Else ws.Cells(i, "DU").Value = result
+
+            result = Application.VLookup(ws.Cells(i, "D").Value, .Range("C:CI"), 16, False)
+            If result = 0 Then ws.Cells(i, "DV").Value = "0" Else ws.Cells(i, "DV").Value = result
+
+            result = Application.VLookup(ws.Cells(i, "D").Value, .Range("C:CI"), 17, False)
+            If result = 0 Then ws.Cells(i, "DW").Value = "0" Else ws.Cells(i, "DW").Value = result
+        End With
+    Next i
+
+    MsgBox "All rows processed successfully!", vbInformation
+
+End Sub
