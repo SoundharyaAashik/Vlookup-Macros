@@ -21,81 +21,84 @@ Sub PerformLookups_AllRows()
 
         ' --- R6_Data Lookups ---
         result = Application.VLookup(ws.Cells(i + 1, "G").Value, Sheets("R6_Data").Range("B:CK"), 88, False)
-        If result = 0 Then ws.Cells(i, "AS").Value = "0" Else ws.Cells(i, "AS").Value = result
+        If Not IsError(result) Then
+            If result = 0 Then ws.Cells(i, "AS").Value = "0" Else ws.Cells(i, "AS").Value = result
+        Else
+            ws.Cells(i, "AS").Value = CVErr(xlErrNA)
+        End If
 
         result = Application.VLookup(ws.Cells(i, "G").Value, Sheets("R6_Data").Range("B:CK"), 84, False)
-        If result = 0 Then ws.Cells(i, "DA").Value = "0" Else ws.Cells(i, "DA").Value = result
+        If Not IsError(result) Then
+            If result = 0 Then ws.Cells(i, "DA").Value = "0" Else ws.Cells(i, "DA").Value = result
+        Else
+            ws.Cells(i, "DA").Value = CVErr(xlErrNA)
+        End If
 
         ' --- RT_Data Lookups ---
         With Sheets("RT_Data")
             result = Application.VLookup(ws.Cells(i, "D").Value, .Range("B:CK"), 84, False)
-            If result = 0 Then ws.Cells(i, "DB").Value = "0" Else ws.Cells(i, "DB").Value = result
+            If Not IsError(result) Then
+                If result = 0 Then ws.Cells(i, "DB").Value = "0" Else ws.Cells(i, "DB").Value = result
+            Else
+                ws.Cells(i, "DB").Value = CVErr(xlErrNA)
+            End If
 
             result = Application.VLookup(ws.Cells(i, "D").Value, .Range("B:CK"), 24, False)
-            If result = 0 Then ws.Cells(i, "DC").Value = "0" Else ws.Cells(i, "DC").Value = result
+            If Not IsError(result) Then
+                If result = 0 Then ws.Cells(i, "DC").Value = "0" Else ws.Cells(i, "DC").Value = result
+            Else
+                ws.Cells(i, "DC").Value = CVErr(xlErrNA)
+            End If
 
             result = Application.VLookup(ws.Cells(i, "D").Value, .Range("B:CK"), 67, False)
-            If result = 0 Then ws.Cells(i, "DD").Value = "0" Else ws.Cells(i, "DD").Value = result
+            If Not IsError(result) Then
+                If result = 0 Then ws.Cells(i, "DD").Value = "0" Else ws.Cells(i, "DD").Value = result
+            Else
+                ws.Cells(i, "DD").Value = CVErr(xlErrNA)
+            End If
 
             result = Application.VLookup(ws.Cells(i, "D").Value, .Range("B:CK"), 85, False)
-            If result = 0 Then ws.Cells(i, "DE").Value = "0" Else ws.Cells(i, "DE").Value = result
+            If Not IsError(result) Then
+                If result = 0 Then ws.Cells(i, "DE").Value = "0" Else ws.Cells(i, "DE").Value = result
+            Else
+                ws.Cells(i, "DE").Value = CVErr(xlErrNA)
+            End If
 
             result = Application.VLookup(ws.Cells(i, "D").Value, .Range("B:CK"), 86, False)
-            If result = 0 Then ws.Cells(i, "DF").Value = "0" Else ws.Cells(i, "DF").Value = result
+            If Not IsError(result) Then
+                If result = 0 Then ws.Cells(i, "DF").Value = "0" Else ws.Cells(i, "DF").Value = result
+            Else
+                ws.Cells(i, "DF").Value = CVErr(xlErrNA)
+            End If
 
             result = Application.VLookup(ws.Cells(i, "D").Value, .Range("B:CK"), 87, False)
-            If result = 0 Then ws.Cells(i, "DG").Value = "0" Else ws.Cells(i, "DG").Value = result
+            If Not IsError(result) Then
+                If result = 0 Then ws.Cells(i, "DG").Value = "0" Else ws.Cells(i, "DG").Value = result
+            Else
+                ws.Cells(i, "DG").Value = CVErr(xlErrNA)
+            End If
         End With
 
         ' --- HES Response Lookups ---
         With Sheets("HES Response")
-            result = Application.VLookup(ws.Cells(i, "D").Value, .Range("C:CI"), 10, False)
-            If result = 0 Then ws.Cells(i, "DH").Value = "0" Else ws.Cells(i, "DH").Value = result
+            Dim colArray As Variant
+            colArray = Array("DH", 10, "DI", 34, "DJ", 38, "DK", 41, "DL", 40, "DM", 44, "DN", 45, _
+                             "DO", 42, "DP", 43, "DQ", 47, "DR", 39, "DS", 46, "DT", 14, "DU", 15, _
+                             "DV", 16, "DW", 17)
 
-            result = Application.VLookup(ws.Cells(i, "D").Value, .Range("C:CI"), 34, False)
-            If result = 0 Then ws.Cells(i, "DI").Value = "0" Else ws.Cells(i, "DI").Value = result
-
-            result = Application.VLookup(ws.Cells(i, "D").Value, .Range("C:CI"), 38, False)
-            If result = 0 Then ws.Cells(i, "DJ").Value = "0" Else ws.Cells(i, "DJ").Value = result
-
-            result = Application.VLookup(ws.Cells(i, "D").Value, .Range("C:CI"), 41, False)
-            If result = 0 Then ws.Cells(i, "DK").Value = "0" Else ws.Cells(i, "DK").Value = result
-
-            result = Application.VLookup(ws.Cells(i, "D").Value, .Range("C:CI"), 40, False)
-            If result = 0 Then ws.Cells(i, "DL").Value = "0" Else ws.Cells(i, "DL").Value = result
-
-            result = Application.VLookup(ws.Cells(i, "D").Value, .Range("C:CI"), 44, False)
-            If result = 0 Then ws.Cells(i, "DM").Value = "0" Else ws.Cells(i, "DM").Value = result
-
-            result = Application.VLookup(ws.Cells(i, "D").Value, .Range("C:CI"), 45, False)
-            If result = 0 Then ws.Cells(i, "DN").Value = "0" Else ws.Cells(i, "DN").Value = result
-
-            result = Application.VLookup(ws.Cells(i, "D").Value, .Range("C:CI"), 42, False)
-            If result = 0 Then ws.Cells(i, "DO").Value = "0" Else ws.Cells(i, "DO").Value = result
-
-            result = Application.VLookup(ws.Cells(i, "D").Value, .Range("C:CI"), 43, False)
-            If result = 0 Then ws.Cells(i, "DP").Value = "0" Else ws.Cells(i, "DP").Value = result
-
-            result = Application.VLookup(ws.Cells(i, "D").Value, .Range("C:CI"), 47, False)
-            If result = 0 Then ws.Cells(i, "DQ").Value = "0" Else ws.Cells(i, "DQ").Value = result
-
-            result = Application.VLookup(ws.Cells(i, "D").Value, .Range("C:CI"), 39, False)
-            If result = 0 Then ws.Cells(i, "DR").Value = "0" Else ws.Cells(i, "DR").Value = result
-
-            result = Application.VLookup(ws.Cells(i, "D").Value, .Range("C:CI"), 46, False)
-            If result = 0 Then ws.Cells(i, "DS").Value = "0" Else ws.Cells(i, "DS").Value = result
-
-            result = Application.VLookup(ws.Cells(i, "D").Value, .Range("C:CI"), 14, False)
-            If result = 0 Then ws.Cells(i, "DT").Value = "0" Else ws.Cells(i, "DT").Value = result
-
-            result = Application.VLookup(ws.Cells(i, "D").Value, .Range("C:CI"), 15, False)
-            If result = 0 Then ws.Cells(i, "DU").Value = "0" Else ws.Cells(i, "DU").Value = result
-
-            result = Application.VLookup(ws.Cells(i, "D").Value, .Range("C:CI"), 16, False)
-            If result = 0 Then ws.Cells(i, "DV").Value = "0" Else ws.Cells(i, "DV").Value = result
-
-            result = Application.VLookup(ws.Cells(i, "D").Value, .Range("C:CI"), 17, False)
-            If result = 0 Then ws.Cells(i, "DW").Value = "0" Else ws.Cells(i, "DW").Value = result
+            Dim j As Long
+            For j = 0 To UBound(colArray) Step 2
+                result = Application.VLookup(ws.Cells(i, "D").Value, .Range("C:CI"), colArray(j + 1), False)
+                If Not IsError(result) Then
+                    If result = 0 Then
+                        ws.Cells(i, colArray(j)).Value = "0"
+                    Else
+                        ws.Cells(i, colArray(j)).Value = result
+                    End If
+                Else
+                    ws.Cells(i, colArray(j)).Value = CVErr(xlErrNA)
+                End If
+            Next j
         End With
     Next i
 
