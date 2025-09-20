@@ -1,0 +1,273 @@
+Sub VlookupAutomator()
+
+' Declare variables
+Dim ws As Worksheet
+Dim r As Variant ' Use Variant to handle potential VLOOKUP errors (#N/A)
+
+' Set the active worksheet to a variable
+Set ws = ActiveSheet
+
+' Optional: Turn off screen updating to speed up the macro
+Application.ScreenUpdating = False
+
+' Step 1: Perform CONCATENATE operations
+' =CONCAT(B2,C2) in cell D2
+ws.Range("D2").Value = ws.Range("B2").Value & ws.Range("C2").Value
+
+' =CONCAT(E2,F2) in cell G2
+ws.Range("G2").Value = ws.Range("E2").Value & ws.Range("F2").Value
+
+' Step 2: Wait for 5 seconds before proceeding
+Application.Wait Now + TimeValue("00:00:05")
+
+' Step 3: Perform all VLOOKUPs
+' Note: We use Application.VLookup to gracefully handle errors.
+'       If an error occurs, the cell value is set to 0.
+
+' VLOOKUP 1: =VLOOKUP(G3,'R6_Data'!B:CK,88,0) in AS2
+On Error Resume Next ' Temporarily ignore errors
+r = Application.VLookup(ws.Range("G3").Value, Worksheets("R6_Data").Range("B:CK"), 88, False)
+If IsError(r) Then
+    ws.Range("AS2").Value = 0
+Else
+    ws.Range("AS2").Value = r
+End If
+On Error GoTo 0 ' Re-enable error handling
+
+' VLOOKUP 2: =VLOOKUP(G2,'R6_Data'!B:CK,84,0) in DA2
+On Error Resume Next
+r = Application.VLookup(ws.Range("G2").Value, Worksheets("R6_Data").Range("B:CK"), 84, False)
+If IsError(r) Then
+    ws.Range("DA2").Value = 0
+Else
+    ws.Range("DA2").Value = r
+End If
+On Error GoTo 0
+
+' VLOOKUP 3: =VLOOKUP(D2,RT_Data!B:CK,84,0) in DB2
+On Error Resume Next
+r = Application.VLookup(ws.Range("D2").Value, Worksheets("RT_Data").Range("B:CK"), 84, False)
+If IsError(r) Then
+    ws.Range("DB2").Value = 0
+Else
+    ws.Range("DB2").Value = r
+End If
+On Error GoTo 0
+
+' VLOOKUP 4: =VLOOKUP(D2,RT_Data!B:CK,24,0) in DC2
+On Error Resume Next
+r = Application.VLookup(ws.Range("D2").Value, Worksheets("RT_Data").Range("B:CK"), 24, False)
+If IsError(r) Then
+    ws.Range("DC2").Value = 0
+Else
+    ws.Range("DC2").Value = r
+End If
+On Error GoTo 0
+
+' VLOOKUP 5: =VLOOKUP(D2,RT_Data!B:CK,67,0) in DD2
+On Error Resume Next
+r = Application.VLookup(ws.Range("D2").Value, Worksheets("RT_Data").Range("B:CK"), 67, False)
+If IsError(r) Then
+    ws.Range("DD2").Value = 0
+Else
+    ws.Range("DD2").Value = r
+End If
+On Error GoTo 0
+
+' VLOOKUP 6: =VLOOKUP(D2,RT_Data!B:CK,85,0) in DE2
+On Error Resume Next
+r = Application.VLookup(ws.Range("D2").Value, Worksheets("RT_Data").Range("B:CK"), 85, False)
+If IsError(r) Then
+    ws.Range("DE2").Value = 0
+Else
+    ws.Range("DE2").Value = r
+End If
+On Error GoTo 0
+
+' VLOOKUP 7: =VLOOKUP(D2,RT_Data!B:CK,86,0) in DF2
+On Error Resume Next
+r = Application.VLookup(ws.Range("D2").Value, Worksheets("RT_Data").Range("B:CK"), 86, False)
+If IsError(r) Then
+    ws.Range("DF2").Value = 0
+Else
+    ws.Range("DF2").Value = r
+End If
+On Error GoTo 0
+
+' VLOOKUP 8: =VLOOKUP(D2,RT_Data!B:CK,87,0) in DG2
+On Error Resume Next
+r = Application.VLookup(ws.Range("D2").Value, Worksheets("RT_Data").Range("B:CK"), 87, False)
+If IsError(r) Then
+    ws.Range("DG2").Value = 0
+Else
+    ws.Range("DG2").Value = r
+End If
+On Error GoTo 0
+
+' VLOOKUP 9: =VLOOKUP(G3,'HES Response'!B:CK,10,0) in DH2
+On Error Resume Next
+r = Application.VLookup(ws.Range("G3").Value, Worksheets("HES Response").Range("B:CK"), 10, False)
+If IsError(r) Then
+    ws.Range("DH2").Value = 0
+Else
+    ws.Range("DH2").Value = r
+End If
+On Error GoTo 0
+
+' VLOOKUP 10: =VLOOKUP(G3,'HES Response'!B:CK,34,0) in DI2
+On Error Resume Next
+r = Application.VLookup(ws.Range("G3").Value, Worksheets("HES Response").Range("B:CK"), 34, False)
+If IsError(r) Then
+    ws.Range("DI2").Value = 0
+Else
+    ws.Range("DI2").Value = r
+End If
+On Error GoTo 0
+
+' VLOOKUP 11: =VLOOKUP(G3,'HES Response'!B:CK,38,0) in DJ2
+On Error Resume Next
+r = Application.VLookup(ws.Range("G3").Value, Worksheets("HES Response").Range("B:CK"), 38, False)
+If IsError(r) Then
+    ws.Range("DJ2").Value = 0
+Else
+    ws.Range("DJ2").Value = r
+End If
+On Error GoTo 0
+
+' VLOOKUP 12: =VLOOKUP(G3,'HES Response'!B:CK,41,0) in DK2
+On Error Resume Next
+r = Application.VLookup(ws.Range("G3").Value, Worksheets("HES Response").Range("B:CK"), 41, False)
+If IsError(r) Then
+    ws.Range("DK2").Value = 0
+Else
+    ws.Range("DK2").Value = r
+End If
+On Error GoTo 0
+
+' VLOOKUP 13: =VLOOKUP(G3,'HES Response'!B:CK,40,0) in DL2
+On Error Resume Next
+r = Application.VLookup(ws.Range("G3").Value, Worksheets("HES Response").Range("B:CK"), 40, False)
+If IsError(r) Then
+    ws.Range("DL2").Value = 0
+Else
+    ws.Range("DL2").Value = r
+End If
+On Error GoTo 0
+
+' VLOOKUP 14: =VLOOKUP(G3,'HES Response'!B:CK,44,0) in DM2
+On Error Resume Next
+r = Application.VLookup(ws.Range("G3").Value, Worksheets("HES Response").Range("B:CK"), 44, False)
+If IsError(r) Then
+    ws.Range("DM2").Value = 0
+Else
+    ws.Range("DM2").Value = r
+End If
+On Error GoTo 0
+
+' VLOOKUP 15: =VLOOKUP(G3,'HES Response'!B:CK,45,0) in DN2
+On Error Resume Next
+r = Application.VLookup(ws.Range("G3").Value, Worksheets("HES Response").Range("B:CK"), 45, False)
+If IsError(r) Then
+    ws.Range("DN2").Value = 0
+Else
+    ws.Range("DN2").Value = r
+End If
+On Error GoTo 0
+
+' VLOOKUP 16: =VLOOKUP(G3,'HES Response'!B:CK,42,0) in DO2
+On Error Resume Next
+r = Application.VLookup(ws.Range("G3").Value, Worksheets("HES Response").Range("B:CK"), 42, False)
+If IsError(r) Then
+    ws.Range("DO2").Value = 0
+Else
+    ws.Range("DO2").Value = r
+End If
+On Error GoTo 0
+
+' VLOOKUP 17: =VLOOKUP(G3,'HES Response'!B:CK,43,0) in DP2
+On Error Resume Next
+r = Application.VLookup(ws.Range("G3").Value, Worksheets("HES Response").Range("B:CK"), 43, False)
+If IsError(r) Then
+    ws.Range("DP2").Value = 0
+Else
+    ws.Range("DP2").Value = r
+End If
+On Error GoTo 0
+
+' VLOOKUP 18: =VLOOKUP(G3,'HES Response'!B:CK,47,0) in DQ2
+On Error Resume Next
+r = Application.VLookup(ws.Range("G3").Value, Worksheets("HES Response").Range("B:CK"), 47, False)
+If IsError(r) Then
+    ws.Range("DQ2").Value = 0
+Else
+    ws.Range("DQ2").Value = r
+End If
+On Error GoTo 0
+
+' VLOOKUP 19: =VLOOKUP(G3,'HES Response'!B:CK,39,0) in DR2
+On Error Resume Next
+r = Application.VLookup(ws.Range("G3").Value, Worksheets("HES Response").Range("B:CK"), 39, False)
+If IsError(r) Then
+    ws.Range("DR2").Value = 0
+Else
+    ws.Range("DR2").Value = r
+End If
+On Error GoTo 0
+
+' VLOOKUP 20: =VLOOKUP(G3,'HES Response'!B:CK,46,0) in DS2
+On Error Resume Next
+r = Application.VLookup(ws.Range("G3").Value, Worksheets("HES Response").Range("B:CK"), 46, False)
+If IsError(r) Then
+    ws.Range("DS2").Value = 0
+Else
+    ws.Range("DS2").Value = r
+End If
+On Error GoTo 0
+
+' VLOOKUP 21: =VLOOKUP(G3,'HES Response'!B:CK,14,0) in DT2
+On Error Resume Next
+r = Application.VLookup(ws.Range("G3").Value, Worksheets("HES Response").Range("B:CK"), 14, False)
+If IsError(r) Then
+    ws.Range("DT2").Value = 0
+Else
+    ws.Range("DT2").Value = r
+End If
+On Error GoTo 0
+
+' VLOOKUP 22: =VLOOKUP(G3,'HES Response'!B:CK,15,0) in DU2
+On Error Resume Next
+r = Application.VLookup(ws.Range("G3").Value, Worksheets("HES Response").Range("B:CK"), 15, False)
+If IsError(r) Then
+    ws.Range("DU2").Value = 0
+Else
+    ws.Range("DU2").Value = r
+End If
+On Error GoTo 0
+
+' VLOOKUP 23: =VLOOKUP(G3,'HES Response'!B:CK,16,0) in DV2
+On Error Resume Next
+r = Application.VLookup(ws.Range("G3").Value, Worksheets("HES Response").Range("B:CK"), 16, False)
+If IsError(r) Then
+    ws.Range("DV2").Value = 0
+Else
+    ws.Range("DV2").Value = r
+End If
+On Error GoTo 0
+
+' VLOOKUP 24: =VLOOKUP(G3,'HES Response'!B:CK,17,0) in DW2
+On Error Resume Next
+r = Application.VLookup(ws.Range("G3").Value, Worksheets("HES Response").Range("B:CK"), 17, False)
+If IsError(r) Then
+    ws.Range("DW2").Value = 0
+Else
+    ws.Range("DW2").Value = r
+End If
+On Error GoTo 0
+
+' Re-enable screen updating
+Application.ScreenUpdating = True
+
+' Inform the user that the macro is complete
+MsgBox "Macro finished. All VLOOKUPs and concatenations are complete.", vbInformation, "Macro Complete"
+
+End Sub
