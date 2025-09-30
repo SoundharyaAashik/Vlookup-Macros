@@ -1,28 +1,22 @@
-Sub ApplyVLookupsToLastRow()
+Sub ApplyVLookups()
     Dim ws As Worksheet
     Dim lastRow As Long
     Dim i As Long
 
-    ' Set your working sheet to Sampling_Plan
-    Set ws = ThisWorkbook.Sheets("Sampling_Plan")
-
-    ' Find the last row with data in column A
+    Set ws = ThisWorkbook.Sheets("Sampling_Plan") ' Updated sheet name
     lastRow = ws.Cells(ws.Rows.Count, "A").End(xlUp).Row
 
-    ' Loop through each row starting from row 3
     For i = 3 To lastRow
-        ' VLOOKUP from R6_Data!A:C, column 3
-        ws.Cells(i, "B").Formula = "=VLOOKUP(A" & i & ",'R6_Data'!A:C,3,FALSE)"
+        ' VLOOKUP from R6_Data!A:C into Column B
+        ws.Cells(i, "B").Formula = "=VLOOKUP(A" & i & ",'R6_Data'!A:C,3,0)"
 
-        ' VLOOKUP from RT_Data!A:C, column 3
-        ws.Cells(i, "C").Formula = "=VLOOKUP(A" & i & ",RT_Data!A:C,3,FALSE)"
+        ' VLOOKUP from RT_Data!A:C into Column C
+        ws.Cells(i, "C").Formula = "=VLOOKUP(A" & i & ",RT_Data!A:C,3,0)"
 
-        ' VLOOKUP from R6_Data!A:X, column 24
-        ws.Cells(i, "D").Formula = "=VLOOKUP(A" & i & ",'R6_Data'!A:X,24,FALSE)"
+        ' VLOOKUP from R6_Data!A:X into Column D
+        ws.Cells(i, "D").Formula = "=VLOOKUP(A" & i & ",'R6_Data'!A:X,24,0)"
 
-        ' VLOOKUP from R6_Data!A:U, column 21
-        ws.Cells(i, "E").Formula = "=VLOOKUP(A" & i & ",'R6_Data'!A:U,21,FALSE)"
+        ' VLOOKUP from R6_Data!A:U into Column E
+        ws.Cells(i, "E").Formula = "=VLOOKUP(A" & i & ",'R6_Data'!A:U,21,0)"
     Next i
-
-    MsgBox "VLOOKUP formulas applied up to row " & lastRow & " in Sampling_Plan"
 End Sub
