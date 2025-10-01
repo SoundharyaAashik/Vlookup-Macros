@@ -1,0 +1,111 @@
+Sub PerformVLOOKUPs()
+    Dim wsSource As Worksheet
+    Dim wsTarget As Worksheet
+    Dim lastRow As Long
+    Dim i As Long
+    Dim lookupValue As Variant
+    Dim result As Variant
+    
+    ' Set worksheets
+    Set wsSource = ThisWorkbook.Sheets("HES Response")
+    Set wsTarget = ThisWorkbook.Sheets("Parallel_Test_Report")
+    
+    ' Find last row in target sheet (column G)
+    lastRow = wsTarget.Cells(wsTarget.Rows.Count, "G").End(xlUp).Row
+    
+    ' Turn off screen updating and automatic calculation for performance
+    Application.ScreenUpdating = False
+    Application.Calculation = xlCalculationManual
+    Application.EnableEvents = False
+    
+    ' Error handling
+    On Error GoTo ErrorHandler
+    
+    ' Perform VLOOKUPs for each row starting from row 2
+    For i = 2 To lastRow
+        lookupValue = wsTarget.Cells(i, 7).Value ' Column G
+        
+        If lookupValue <> "" Then
+            ' Column DH (VLOOKUP column 10)
+            result = Application.VLookup(lookupValue, wsSource.Range("B:CK"), 10, False)
+            If Not IsError(result) Then wsTarget.Cells(i, 116).Value = result
+            
+            ' Column DI (VLOOKUP column 34)
+            result = Application.VLookup(lookupValue, wsSource.Range("B:CK"), 34, False)
+            If Not IsError(result) Then wsTarget.Cells(i, 117).Value = result
+            
+            ' Column DJ (VLOOKUP column 38)
+            result = Application.VLookup(lookupValue, wsSource.Range("B:CK"), 38, False)
+            If Not IsError(result) Then wsTarget.Cells(i, 118).Value = result
+            
+            ' Column DK (VLOOKUP column 41)
+            result = Application.VLookup(lookupValue, wsSource.Range("B:CK"), 41, False)
+            If Not IsError(result) Then wsTarget.Cells(i, 119).Value = result
+            
+            ' Column DL (VLOOKUP column 40)
+            result = Application.VLookup(lookupValue, wsSource.Range("B:CK"), 40, False)
+            If Not IsError(result) Then wsTarget.Cells(i, 120).Value = result
+            
+            ' Column DM (VLOOKUP column 44)
+            result = Application.VLookup(lookupValue, wsSource.Range("B:CK"), 44, False)
+            If Not IsError(result) Then wsTarget.Cells(i, 121).Value = result
+            
+            ' Column DN (VLOOKUP column 45)
+            result = Application.VLookup(lookupValue, wsSource.Range("B:CK"), 45, False)
+            If Not IsError(result) Then wsTarget.Cells(i, 122).Value = result
+            
+            ' Column DO (VLOOKUP column 42)
+            result = Application.VLookup(lookupValue, wsSource.Range("B:CK"), 42, False)
+            If Not IsError(result) Then wsTarget.Cells(i, 123).Value = result
+            
+            ' Column DP (VLOOKUP column 43)
+            result = Application.VLookup(lookupValue, wsSource.Range("B:CK"), 43, False)
+            If Not IsError(result) Then wsTarget.Cells(i, 124).Value = result
+            
+            ' Column DQ (VLOOKUP column 47)
+            result = Application.VLookup(lookupValue, wsSource.Range("B:CK"), 47, False)
+            If Not IsError(result) Then wsTarget.Cells(i, 125).Value = result
+            
+            ' Column DR (VLOOKUP column 39)
+            result = Application.VLookup(lookupValue, wsSource.Range("B:CK"), 39, False)
+            If Not IsError(result) Then wsTarget.Cells(i, 126).Value = result
+            
+            ' Column DS (VLOOKUP column 46)
+            result = Application.VLookup(lookupValue, wsSource.Range("B:CK"), 46, False)
+            If Not IsError(result) Then wsTarget.Cells(i, 127).Value = result
+            
+            ' Column DT (VLOOKUP column 14)
+            result = Application.VLookup(lookupValue, wsSource.Range("B:CK"), 14, False)
+            If Not IsError(result) Then wsTarget.Cells(i, 128).Value = result
+            
+            ' Column DU (VLOOKUP column 15)
+            result = Application.VLookup(lookupValue, wsSource.Range("B:CK"), 15, False)
+            If Not IsError(result) Then wsTarget.Cells(i, 129).Value = result
+            
+            ' Column DV (VLOOKUP column 16)
+            result = Application.VLookup(lookupValue, wsSource.Range("B:CK"), 16, False)
+            If Not IsError(result) Then wsTarget.Cells(i, 130).Value = result
+            
+            ' Column DW (VLOOKUP column 17)
+            result = Application.VLookup(lookupValue, wsSource.Range("B:CK"), 17, False)
+            If Not IsError(result) Then wsTarget.Cells(i, 131).Value = result
+        End If
+    Next i
+    
+    ' Restore settings
+    Application.Calculation = xlCalculationAutomatic
+    Application.ScreenUpdating = True
+    Application.EnableEvents = True
+    
+    MsgBox "VLOOKUPs completed successfully for " & (lastRow - 1) & " rows!", vbInformation
+    
+    Exit Sub
+    
+ErrorHandler:
+    ' Restore settings even if error occurs
+    Application.Calculation = xlCalculationAutomatic
+    Application.ScreenUpdating = True
+    Application.EnableEvents = True
+    
+    MsgBox "Error occurred in row " & i & ": " & Err.Description, vbCritical
+End Sub
