@@ -1,0 +1,12 @@
+Vlookup for
+=CONCAT(E2,F2) - It should be placed in Column G
+=CONCAT(H2,I2) - It should be placed in Column J	
+=VLOOKUP(G2,RT_Data!B:CL,88,0) - It should be placed in Column BB
+=VLOOKUP(J3,'R6_Data'!B:CG,84,0) - It should be placed in Column DA
+For the below Vlookups - when the result is "0", value in the cells should be placed as "0"
+=VLOOKUP(G2,RT_Data!B:CG,84,0) - It should be placed in Column DB
+=VLOOKUP(G2,RT_Data!B:CG,24,0) - It should be placed in Column DC
+=VLOOKUP(G2,RT_Data!B:CG,67,0) - It should be placed in Column DD
+=VLOOKUP(G2,RT_Data!B:CG,85,0) - It should be placed in Column DE
+=VLOOKUP(G2,RT_Data!B:CG,86,0) - It should be placed in Column DF
+=VLOOKUP(G2,RT_Data!B:CG,87,0) - It should be placed in Column DG
