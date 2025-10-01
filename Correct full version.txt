@@ -1,0 +1,46 @@
+Sub PerformVlookupsAndConcats()
+    Dim ws As Worksheet
+    Dim lastRow As Long
+    Dim i As Long, j As Long
+    Dim result As Variant
+    Dim targetCol As Variant
+
+    ' Set the working sheet
+    Set ws = ThisWorkbook.Sheets("Parallel_Test_Report")
+
+    ' Find the last row based on column E
+    lastRow = ws.Cells(ws.Rows.Count, "E").End(xlUp).Row
+
+    ' VLOOKUP columns for "0" fallback
+    targetCol = Array(84, 24, 67, 85, 86, 87) ' Corresponds to DB to DG
+
+    ' Loop through each row
+    For i = 2 To lastRow
+        ' Concatenate E & F into G
+        ws.Cells(i, "G").Value = ws.Cells(i, "E").Value & ws.Cells(i, "F").Value
+
+        ' Concatenate H & I into J
+        ws.Cells(i, "J").Value = ws.Cells(i, "H").Value & ws.Cells(i, "I").Value
+
+        ' VLOOKUP(G2,RT_Data!B:CL,88,0) → Column BB
+        ws.Cells(i, "BB").Formula = "=IFERROR(VLOOKUP(G" & i & ",RT_Data!B:CL,88,FALSE),"""")"
+
+        ' VLOOKUP(J2,'R6_Data'!B:CG,84,0) → Column DA
+        ws.Cells(i, "DA").Formula = "=IFERROR(VLOOKUP(J" & i & ",'R6_Data'!B:CG,84,FALSE),"""")"
+
+        ' VLOOKUPs with "0" fallback → Columns DB to DG
+        For j = 0 To UBound(targetCol)
+            result = Application.VLookup(ws.Cells(i, "G").Value, Sheets("RT_Data").Range("B:CG"), targetCol(j), False)
+
+            If IsError(result) Then
+                ws.Cells(i, 57 + j).Value = "0" ' Columns DB (57) to DG (62)
+            ElseIf result = 0 Then
+                ws.Cells(i, 57 + j).Value = "0"
+            Else
+                ws.Cells(i, 57 + j).Value = result
+            End If
+        Next j
+    Next i
+
+    MsgBox "All concatenations and VLOOKUPs completed successfully!"
+End Sub
