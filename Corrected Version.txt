@@ -1,0 +1,13 @@
+For i = 2 To lastRow
+    For j = 1 To UBound(targetCol)
+        result = Application.VLookup(ws.Cells(i, "G").Value, Sheets("RT_Data").Range("B:CG"), targetCol(j), False)
+
+        If IsError(result) Then
+            ws.Cells(i, targetCol(j)).Value = "0"
+        ElseIf result = 0 Then
+            ws.Cells(i, targetCol(j)).Value = "0"
+        Else
+            ws.Cells(i, targetCol(j)).Value = result
+        End If
+    Next j
+Next i
