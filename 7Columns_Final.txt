@@ -1,0 +1,59 @@
+Sub PerformVlookupsWithZeroHandling()
+    Dim ws As Worksheet
+    Dim lastRow As Long
+    Dim i As Long
+    Dim lookupValG As String, lookupValJ As String
+    Dim result As Variant
+
+    ' Set the target worksheet
+    Set ws = ThisWorkbook.Sheets("parallel test report")
+    
+    ' Find the last row with data in column E
+    lastRow = ws.Cells(ws.Rows.Count, "E").End(xlUp).Row
+
+    For i = 2 To lastRow
+        ' Concatenate E & F into G
+        ws.Cells(i, "G").Value = ws.Cells(i, "E").Value & ws.Cells(i, "F").Value
+        
+        ' Concatenate H & I into J
+        ws.Cells(i, "J").Value = ws.Cells(i, "H").Value & ws.Cells(i, "I").Value
+        
+        lookupValG = ws.Cells(i, "G").Value
+        lookupValJ = ws.Cells(i, "J").Value
+
+        ' VLOOKUP G2 in RT_Data!B:CL, column 88 → BB
+        result = Application.VLookup(lookupValG, Sheets("RT_Data").Range("B:CL"), 88, False)
+        If IsError(result) Then
+            ws.Cells(i, "BB").Value = ""
+        Else
+            ws.Cells(i, "BB").Value = result
+        End If
+
+        ' VLOOKUP J3 in R6_Data!B:CG, column 84 → DA
+        If i + 1 <= lastRow Then
+            result = Application.VLookup(ws.Cells(i + 1, "J").Value, Sheets("R6_Data").Range("B:CG"), 84, False)
+            If IsError(result) Then
+                ws.Cells(i + 1, "DA").Value = ""
+            Else
+                ws.Cells(i + 1, "DA").Value = result
+            End If
+        End If
+
+        ' VLOOKUPs with strict "0" handling
+        Dim colIndex As Variant, targetCol As Variant
+        colIndex = Array(84, 24, 67, 85, 86, 87)
+        targetCol = Array("DB", "DC", "DD", "DE", "DF", "DG")
+
+        Dim j As Integer
+        For j = 0 To UBound(colIndex)
+            result = Application.VLookup(lookupValG, Sheets("RT_Data").Range("B:CG"), colIndex(j), False)
+            If IsError(result) Then
+                ws.Cells(i, targetCol(j)).Value = "0"
+            ElseIf result = 0 Then
+                ws.Cells(i, targetCol(j)).Value = "0"
+            Else
+                ws.Cells(i, targetCol(j)).Value = result
+            End If
+        Next j
+    Next i
+End Sub
