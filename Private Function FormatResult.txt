@@ -1,0 +1,17 @@
+Private Function FormatResult(val As Variant, formatDecimal As Boolean) As String
+    If IsError(val) Then
+        FormatResult = "N/A"
+    ElseIf IsEmpty(val) Then
+        FormatResult = "N/A"
+    ElseIf VarType(val) = vbString And Trim(val) = "" Then
+        FormatResult = "N/A"
+    ElseIf formatDecimal Then
+        If IsNumeric(val) Then
+            FormatResult = Format(val, "0.00")
+        Else
+            FormatResult = "N/A"
+        End If
+    Else
+        FormatResult = CStr(val)
+    End If
+End Function
