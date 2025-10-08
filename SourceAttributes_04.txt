@@ -1,0 +1,152 @@
+Sub SourceAttributes()
+    Dim wsSource As Worksheet
+    Dim wsTarget As Worksheet
+    Dim lastRow As Long
+    Dim i As Long
+    Dim lookupValue As Variant
+    Dim result As Variant
+
+    ' Set worksheets
+    Set wsSource = ThisWorkbook.Sheets("HES Response")
+    Set wsTarget = ThisWorkbook.Sheets("Parallel_Test_Report")
+
+    ' Find last row in target sheet (column G)
+    lastRow = wsTarget.Cells(wsTarget.Rows.Count, "G").End(xlUp).Row
+
+    ' Turn off screen updating and automatic calculation for performance
+    Application.ScreenUpdating = False
+    Application.Calculation = xlCalculationManual
+    Application.EnableEvents = False
+
+    ' Error handling
+    On Error GoTo ErrorHandler
+
+    ' Perform VLOOKUPs for each row starting from row 2
+    For i = 2 To lastRow
+        lookupValue = wsTarget.Cells(i, 7).Value ' Column G
+
+        If lookupValue <> "" Then
+            ' Column DH (VLOOKUP column 10)
+            result = Application.VLookup(lookupValue, wsSource.Range("B:CK"), 10, False)
+            wsTarget.Cells(i, 112).Value = FormatResult(result, False)
+
+            ' Column DI (VLOOKUP column 34)
+            result = Application.VLookup(lookupValue, wsSource.Range("B:CK"), 34, False)
+            wsTarget.Cells(i, 113).Value = FormatResult(result, False)
+
+            ' Column DJ (VLOOKUP column 38)
+            result = Application.VLookup(lookupValue, wsSource.Range("B:CK"), 38, False)
+            wsTarget.Cells(i, 114).Value = FormatResult(result, False)
+
+            ' Column DK (VLOOKUP column 41) with 2 decimal formatting
+            result = Application.VLookup(lookupValue, wsSource.Range("B:CK"), 41, False)
+            wsTarget.Cells(i, 115).Value = FormatResult(result, True)
+
+            ' Column DL (VLOOKUP column 40) with 2 decimal formatting
+            result = Application.VLookup(lookupValue, wsSource.Range("B:CK"), 40, False)
+            wsTarget.Cells(i, 116).Value = FormatResult(result, True)
+
+            ' Column DM (VLOOKUP column 44) with 2 decimal formatting
+            result = Application.VLookup(lookupValue, wsSource.Range("B:CK"), 44, False)
+            wsTarget.Cells(i, 117).Value = FormatResult(result, True)
+
+            ' Column DN (VLOOKUP column 45)
+            result = Application.VLookup(lookupValue, wsSource.Range("B:CK"), 45, False)
+            wsTarget.Cells(i, 118).Value = FormatResult(result, False)
+
+            ' Column DO (VLOOKUP column 42)
+            result = Application.VLookup(lookupValue, wsSource.Range("B:CK"), 42, False)
+            wsTarget.Cells(i, 119).Value = FormatResult(result, False)
+
+            ' Column DP (VLOOKUP column 43)
+            result = Application.VLookup(lookupValue, wsSource.Range("B:CK"), 43, False)
+            wsTarget.Cells(i, 120).Value = FormatResult(result, False)
+
+            ' Column DQ (VLOOKUP column 47)
+            result = Application.VLookup(lookupValue, wsSource.Range("B:CK"), 47, False)
+            wsTarget.Cells(i, 121).Value = FormatResult(result, False)
+
+            ' Column DR (VLOOKUP column 39)
+            result = Application.VLookup(lookupValue, wsSource.Range("B:CK"), 39, False)
+            wsTarget.Cells(i, 122).Value = FormatResult(result, False)
+
+            ' Column DS (VLOOKUP column 46)
+            result = Application.VLookup(lookupValue, wsSource.Range("B:CK"), 46, False)
+            wsTarget.Cells(i, 123).Value = FormatResult(result, False)
+
+            ' Column DT (VLOOKUP column 14)
+            result = Application.VLookup(lookupValue, wsSource.Range("B:CK"), 14, False)
+            wsTarget.Cells(i, 124).Value = FormatResult(result, False)
+
+            ' Column DU (VLOOKUP column 15)
+            result = Application.VLookup(lookupValue, wsSource.Range("B:CK"), 15, False)
+            wsTarget.Cells(i, 125).Value = FormatResult(result, False)
+
+            ' Column DV (VLOOKUP column 16)
+            result = Application.VLookup(lookupValue, wsSource.Range("B:CK"), 16, False)
+            wsTarget.Cells(i, 126).Value = FormatResult(result, False)
+
+            ' Column DW (VLOOKUP column 17)
+            result = Application.VLookup(lookupValue, wsSource.Range("B:CK"), 17, False)
+            wsTarget.Cells(i, 127).Value = FormatResult(result, False)
+        Else
+            ' If lookup value is blank, set all target cells to #N/A
+            wsTarget.Cells(i, 112).Value = CVErr(xlErrNA)
+            wsTarget.Cells(i, 113).Value = CVErr(xlErrNA)
+            wsTarget.Cells(i, 114).Value = CVErr(xlErrNA)
+            wsTarget.Cells(i, 115).Value = CVErr(xlErrNA)
+            wsTarget.Cells(i, 116).Value = CVErr(xlErrNA)
+            wsTarget.Cells(i, 117).Value = CVErr(xlErrNA)
+            wsTarget.Cells(i, 118).Value = CVErr(xlErrNA)
+            wsTarget.Cells(i, 119).Value = CVErr(xlErrNA)
+            wsTarget.Cells(i, 120).Value = CVErr(xlErrNA)
+            wsTarget.Cells(i, 121).Value = CVErr(xlErrNA)
+            wsTarget.Cells(i, 122).Value = CVErr(xlErrNA)
+            wsTarget.Cells(i, 123).Value = CVErr(xlErrNA)
+            wsTarget.Cells(i, 124).Value = CVErr(xlErrNA)
+            wsTarget.Cells(i, 125).Value = CVErr(xlErrNA)
+            wsTarget.Cells(i, 126).Value = CVErr(xlErrNA)
+            wsTarget.Cells(i, 127).Value = CVErr(xlErrNA)
+        End If
+    Next i
+
+    ' Apply number formatting to decimal columns
+    For i = 2 To lastRow
+        ' Apply 2 decimal format to numeric columns
+        wsTarget.Cells(i, 115).NumberFormat = "0.00" ' Column DK
+        wsTarget.Cells(i, 116).NumberFormat = "0.00" ' Column DL
+        wsTarget.Cells(i, 117).NumberFormat = "0.00" ' Column DM
+    Next i
+
+    ' Restore settings
+    Application.Calculation = xlCalculationAutomatic
+    Application.ScreenUpdating = True
+    Application.EnableEvents = True
+
+    MsgBox "VLOOKUPs completed successfully for " & (lastRow - 1) & " rows!", vbInformation
+    Exit Sub
+
+ErrorHandler:
+    Application.Calculation = xlCalculationAutomatic
+    Application.ScreenUpdating = True
+    Application.EnableEvents = True
+    MsgBox "Error occurred in row " & i & ": " & Err.Description, vbCritical
+End Sub
+
+' Helper function for formatting results
+Private Function FormatResult(val As Variant, formatDecimal As Boolean) As Variant
+    If IsError(val) Then
+        FormatResult = CVErr(xlErrNA)
+    ElseIf IsEmpty(val) Or val = "" Or Trim(val) = "" Then
+        FormatResult = CVErr(xlErrNA)
+    ElseIf formatDecimal Then
+        If IsNumeric(val) Then
+            ' Return as number - cell formatting will display as 0.00
+            FormatResult = CDbl(val)
+        Else
+            FormatResult = CVErr(xlErrNA)
+        End If
+    Else
+        FormatResult = val
+    End If
+End Function
