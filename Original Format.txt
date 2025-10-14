@@ -1,0 +1,1337 @@
+
+Public LastRowReport As Long
+Public LastRowR6Data As Long
+Public LastRowRTData As Long
+Public Const ReportName As String = "Parallel_Test_Report"
+
+Sub Report_Cleanup()
+    Sheets(ReportName).Select
+    If Sheets(ReportName).Cells(2, 2) = "RT_ReportKey" Then
+        Columns("B:B").Select
+        Selection.Delete Shift:=xlToLeft
+    End If
+    If Sheets(ReportName).Cells(2, 4) = "R6_ReportKey" Then
+        Columns("D:D").Select
+        Selection.Delete Shift:=xlToLeft
+    End If
+    Rows("3:3").Select
+    Range(Selection, Selection.End(xlDown)).Select
+    Range(Selection, Selection.End(xlDown)).Select
+    Selection.Delete Shift:=xlUp
+    ActiveWorkbook.Save
+End Sub
+
+Sub LastRow_Setup()
+    Sheets(ReportName).Select
+    If (ActiveSheet.AutoFilterMode And ActiveSheet.FilterMode) Or ActiveSheet.FilterMode Then
+      ActiveSheet.ShowAllData
+    End If
+    LastRowReport = ActiveSheet.Range("A1").CurrentRegion.Rows.Count
+    
+    Sheets("R6_Data").Select
+    If (ActiveSheet.AutoFilterMode And ActiveSheet.FilterMode) Or ActiveSheet.FilterMode Then
+      ActiveSheet.ShowAllData
+    End If
+    LastRowR6Data = ActiveSheet.Range("A1").CurrentRegion.Rows.Count
+    
+    Sheets("RT_Data").Select
+    If (ActiveSheet.AutoFilterMode And ActiveSheet.FilterMode) Or ActiveSheet.FilterMode Then
+      ActiveSheet.ShowAllData
+    End If
+    LastRowRTData = ActiveSheet.Range("A1").CurrentRegion.Rows.Count
+    Sheets(ReportName).Select
+End Sub
+
+Sub Wait(seconds As Integer)
+    Dim now As Long
+    now = Timer()
+    Do
+        DoEvents
+    Loop While (Timer < now + seconds)
+
+End Sub
+Sub Report_Autofit()
+
+    Sheets(ReportName).Select
+    Cells.Select
+    Cells.EntireColumn.AutoFit
+    
+    Sheets("R6_Data").Select
+    Cells.Select
+    Cells.EntireColumn.AutoFit
+    
+    Sheets("RT_Data").Select
+    Cells.Select
+    Cells.EntireColumn.AutoFit
+End Sub
+
+Sub Set_AllHoldCodes()
+
+    Sheets("R6_Data").Select
+    Columns("G:G").Select
+    Selection.NumberFormat = "General"
+    Range("G2").Select
+    ActiveCell.FormulaR1C1 = _
+        "=CONCATENATE(RC[1],IF(RC[2]="""",RC[2],"",""&RC[2]),IF(RC[3]="""",RC[3],"",""&RC[3]),IF(RC[4]="""",RC[4],"",""&RC[4]),IF(RC[5]="""",RC[5],"",""&RC[5]),IF(RC[6]="""",RC[6],"",""&RC[6]))"
+    Range("G2").Select
+    Selection.AutoFill Destination:=Range("G2:G" & LastRowR6Data)
+    Range("G2:G" & LastRowR6Data).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Application.CutCopyMode = False
+
+    
+    Sheets("RT_Data").Select
+    Columns("G:G").Select
+    Selection.NumberFormat = "General"
+    Range("G2").Select
+    ActiveCell.FormulaR1C1 = _
+        "=CONCATENATE(RC[1],IF(RC[2]="""",RC[2],"",""&RC[2]),IF(RC[3]="""",RC[3],"",""&RC[3]),IF(RC[4]="""",RC[4],"",""&RC[4]),IF(RC[5]="""",RC[5],"",""&RC[5]),IF(RC[6]="""",RC[6],"",""&RC[6]))"
+    Range("G2").Select
+    Selection.AutoFill Destination:=Range("G2:G" & LastRowRTData)
+    Range("G2:G" & LastRowRTData).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Application.CutCopyMode = False
+    ActiveWorkbook.Save
+    
+End Sub
+
+Sub Set_AllMOD()
+
+    Sheets("R6_Data").Select
+    Columns("AF:AF").Select
+    Selection.NumberFormat = "General"
+    Range("AF2").Select
+        
+    ActiveCell.FormulaR1C1 = _
+        "=CONCATENATE(RC[1],IF(TRIM(RC[2])="""",TRIM(RC[2]),"",""&TRIM(RC[2])),IF(TRIM(RC[3])="""",TRIM(RC[3]),"",""&TRIM(RC[3])))"
+        
+    Range("AF2").Select
+    Selection.AutoFill Destination:=Range("AF2:AF" & LastRowR6Data)
+    Range("AF2:AF" & LastRowR6Data).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Application.CutCopyMode = False
+    
+    Sheets("RT_Data").Select
+    Columns("AF:AF").Select
+    Selection.NumberFormat = "General"
+    Range("AF2").Select
+    ActiveCell.FormulaR1C1 = _
+        "=CONCATENATE(RC[1],IF(TRIM(RC[2])="""",TRIM(RC[2]),"",""&TRIM(RC[2])),IF(TRIM(RC[3])="""",TRIM(RC[3]),"",""&TRIM(RC[3])))"
+    Range("AF2").Select
+    Selection.AutoFill Destination:=Range("AF2:AF" & LastRowRTData)
+    Range("AF2:AF" & LastRowRTData).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Application.CutCopyMode = False
+    ActiveWorkbook.Save
+    
+End Sub
+
+Sub Delete_ClaimsKeyField()
+
+    Sheets(ReportName).Select
+     If Sheets(ReportName).Cells(2, 2) = "RT_ReportKey" Then
+      Columns("B:B").Select
+        Selection.Delete Shift:=xlToLeft
+
+    End If
+    If Sheets(ReportName).Cells(2, 4) = "R6_ReportKey" Then
+        Columns("D:D").Select
+        Selection.Delete Shift:=xlToLeft
+    End If
+End Sub
+
+
+Sub ExternalClaim()
+' 1st Call
+    
+    Call Report_Cleanup
+    
+    'Copied Data from R6_Data sheet
+    Sheets("R6_Data").Select
+    Range("A2").Select
+    Range(Selection, Selection.End(xlDown)).Select
+    Selection.Copy
+    
+    'Pasted Data to Report sheet
+    Sheets(ReportName).Select
+    Range("A3").Select
+    ActiveSheet.Paste
+    Application.CutCopyMode = False
+    
+    'Setup lastrow public variable
+    Call LastRow_Setup
+    'one time activity after Query file loaded
+    'Call Set_AllHoldCodes
+    'CALL Set_AllMOD
+    
+    ActiveWorkbook.Save
+
+End Sub
+Sub Claim_Copy()
+'
+' 2nd Call
+    
+    'Setting R6 data on Report tab
+    Sheets("R6_Data").Select
+    Range("C2:D2").Select
+    Range(Selection, Selection.End(xlDown)).Select
+    Selection.Copy
+    Sheets(ReportName).Select
+    Range("D3").Select
+    ActiveSheet.Paste
+    
+    Columns("B:B").Select
+    Selection.NumberFormat = "General"
+    Range("B3").Select
+    ActiveCell.FormulaR1C1 = "=iferror(VLOOKUP(RC[-1],Sampling_Plan!C[-1]:C[1],3,FALSE),""MISSING"")"
+    Selection.AutoFill Destination:=Range("B3:B" & LastRowReport)
+    Range("B3:B" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+        
+    ActiveWorkbook.Save
+    
+End Sub
+
+Sub Setting_Key()
+'
+' 3rd call
+
+    'Setting RT Claim Keyline on Report sheet
+    
+    Sheets(ReportName).Select
+    'First check if key is already set
+    If Sheets(ReportName).Cells(2, 2) <> "RT_ReportKey" Then
+        Columns("B:B").Select
+        Selection.Insert Shift:=xlToRight, CopyOrigin:=xlFormatFromLeftOrAbove
+    End If
+    Columns("B:B").Select
+    Selection.NumberFormat = "General"
+    Range("C2").Select
+    Selection.Copy
+    Range("B2").Select
+    Selection.PasteSpecial Paste:=xlPasteFormats, Operation:=xlNone, _
+        SkipBlanks:=False, Transpose:=False
+    ActiveCell.FormulaR1C1 = "RT_ReportKey"
+    Range("B3").Select
+    
+
+    ActiveCell.FormulaR1C1 = "=CONCATENATE(RC[1],RC[4])"
+    Selection.AutoFill Destination:=Range("B3:B" & LastRowReport)
+    Range("B3:B" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    
+    
+    'Setting R6 Claim Keyline on Report sheet
+    If Sheets(ReportName).Cells(2, 5) <> "R6_ReportKey" Then
+        Columns("E:E").Select
+        Selection.Insert Shift:=xlToRight, CopyOrigin:=xlFormatFromLeftOrAbove
+    End If
+    Columns("E:E").Select
+    Selection.NumberFormat = "General"
+    Range("F2").Select
+    Selection.Copy
+    Range("E2").Select
+    Selection.PasteSpecial Paste:=xlPasteFormats, Operation:=xlNone, _
+        SkipBlanks:=False, Transpose:=False
+    ActiveCell.FormulaR1C1 = "R6_ReportKey"
+    Range("E3").Select
+    ActiveCell.FormulaR1C1 = "=CONCATENATE(RC[1],RC[2])"
+    Selection.AutoFill Destination:=Range("E3:E" & LastRowReport)
+    Range("E3:E" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+        
+    Sheets(ReportName).Select
+    ActiveWorkbook.Save
+End Sub
+
+Sub Claim_LineVLookup2()
+'
+'4th Call
+'
+    Sheets(ReportName).Select
+    Columns("D:D").Select
+    Selection.NumberFormat = "General"
+    Range("D3").Select
+    Application.CutCopyMode = False
+    ActiveCell.FormulaR1C1 = "=iferror(VLOOKUP(RC[-2],RT_Data!C[-2]:C[1],3,FALSE),""MISSING"")"
+    
+'    Wait (2)
+    Range("D3").Select
+    
+    
+    Selection.AutoFill Destination:=Range("D3:D" & LastRowReport)
+    Wait (2)
+    Range("D3:D" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+        
+    Columns("B:B").Select
+    Application.CutCopyMode = False
+    Selection.NumberFormat = "General"
+    Range("B3").Select
+    ActiveCell.FormulaR1C1 = "=CONCATENATE(RC[1],RC[2])"
+    Selection.AutoFill Destination:=Range("B3:B" & LastRowReport)
+    Range("B3:B" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+
+     ActiveWorkbook.Save
+
+End Sub
+
+Sub Set_ServiceCode()
+'
+' 5th Call
+'
+'   Set RT Service Code
+    Sheets(ReportName).Select
+    Range("H3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=IFERROR(VLOOKUP(RC[-6],RT_Data!C[-6]:C[-3],4,FALSE),""MISSING"")"
+    Range("H3").Select
+    Selection.AutoFill Destination:=Range("H3:H" & LastRowReport)
+    Range("H3:H" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Application.CutCopyMode = False
+    
+    'R6- Service code
+    Sheets(ReportName).Select
+    Range("I3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=IFERROR(VLOOKUP(RC[-4],'R6_Data'!C[-7]:C[-4],4,FALSE),""MISSING"")"
+    Range("I3").Select
+    Selection.AutoFill Destination:=Range("I3:I" & LastRowReport)
+    Range("I3:I" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+        
+    'R6- Claim Id service code match
+    Sheets(ReportName).Select
+    Range("J3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=IFERROR(IF(RC[-2]=RC[-1],""Service code matched"",""Service code not matched""),""MISSING"")"
+    Range("J3").Select
+    Selection.AutoFill Destination:=Range("J3:J" & LastRowReport)
+    Range("J3:J" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Application.CutCopyMode = False
+    
+    'RT- Source allowed amount
+    Sheets(ReportName).Select
+    Range("K3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=IFERROR(VLOOKUP(RC[-9],RT_Data!C[-9]:C[-5],5,FALSE),""MISSING"")"
+    Range("K3").Select
+    Selection.AutoFill Destination:=Range("K3:K" & LastRowReport)
+    Range("K3:K" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+        
+    'R6 allowed amount
+    Range("L3").Select
+    Application.CutCopyMode = False
+    ActiveCell.FormulaR1C1 = _
+        "=IFERROR(VLOOKUP(RC[-7],'R6_Data'!C[-10]:C[-6],5,FALSE),""MISSING"")"
+    Range("L3").Select
+    Selection.AutoFill Destination:=Range("L3:L" & LastRowReport)
+    Range("L3:L" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+        
+    'Difference between Source allowed amount/ Region 6 allowed amount
+    Sheets(ReportName).Select
+    Range("M3").Select
+    ActiveCell.FormulaR1C1 = "=VALUE(RC[-2])-VALUE(RC[-1])"
+    Range("M3").Select
+    Selection.AutoFill Destination:=Range("M3:M" & LastRowReport)
+    Range("M3:M" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Application.CutCopyMode = False
+    
+    'variance percentage
+    Range("N3").Select
+    Application.CutCopyMode = False
+    ActiveCell.FormulaR1C1 = "=RC[-1]/RC[-3]"
+    Range("N3").Select
+    Selection.AutoFill Destination:=Range("N3:N" & LastRowReport)
+    Range("N3:N" & LastRowReport).Select
+        
+    ActiveWorkbook.Save
+        
+End Sub
+
+Sub Set_HoldCode()
+'
+' 6th Call
+    'Set_AllHoldCodes
+    Sheets(ReportName).Select
+    Columns("AA:AB").Select
+    Selection.NumberFormat = "General"
+    Range("AA3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-25],RT_Data!C[-25],RT_Data!C[-20],"""",0,1)"
+    Range("AA3").Select
+    Selection.AutoFill Destination:=Range("AA3:AA" & LastRowReport)
+    Range("AA3:AA" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Application.CutCopyMode = False
+    
+    Range("AB3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-23],'R6_Data'!C[-26],'R6_Data'!C[-21],"""",0,1)"
+    Range("AB3").Select
+    Selection.AutoFill Destination:=Range("AB3:AB" & LastRowReport)
+    Range("AB3:AB" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Application.CutCopyMode = False
+    ActiveWorkbook.Save
+    
+End Sub
+Sub Set_UnitCT()
+'
+' 6.1 call
+'
+    'RT Unit
+    Sheets(ReportName).Select
+    Columns("AC:AE").Select
+    Range("AC2").Activate
+    Selection.NumberFormat = "General"
+    Range("AC3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-27],RT_Data!C[-27],RT_Data!C[51],""MISSING"",0,1)&"""""
+    Range("AC3").Select
+    Selection.AutoFill Destination:=Range("AC3:AC" & LastRowReport)
+    Range("AC3:AC" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+        
+    
+    'R6 Unit
+    Range("AD3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-25],'R6_Data'!C[-28],'R6_Data'!C[50],""MISSING"",0,1)&"""""
+    Range("AD3").Select
+    Selection.AutoFill Destination:=Range("AD3:AD" & LastRowReport)
+    Range("AD3:AD" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+         
+    'Unit Match
+    Range("AE3").Select
+    ActiveCell.FormulaR1C1 = "=IF(RC[-2]=RC[-1],""Units Matched"",""Mismatch in Units"")"
+    Range("AE3").Select
+    Selection.AutoFill Destination:=Range("AE3:AE" & LastRowReport)
+    Range("AE3:AE" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+End Sub
+Sub Set_FeeCode()
+'
+' 7th Call
+    'RT feecod
+    
+    Sheets(ReportName).Select
+    Columns("AF:AH").Select
+    Selection.NumberFormat = "General"
+    Range("AF3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-30],RT_Data!C[-30],RT_Data!C[-18],""MISSING"",0,1)"
+    Range("AF3").Select
+    Selection.AutoFill Destination:=Range("AF3:AF" & LastRowReport)
+    Range("AF3:AF" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+        
+    'Region 6 feecod
+    Range("AG3").Select
+    Application.CutCopyMode = False
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-28],'R6_Data'!C[-31],'R6_Data'!C[-19],"""",0,1)"
+    Range("AG3").Select
+    Selection.AutoFill Destination:=Range("AG3:AG" & LastRowReport)
+    Range("AG3:AG" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+        
+    'feecod match
+    Range("AH3").Select
+    Application.CutCopyMode = False
+    ActiveCell.FormulaR1C1 = _
+        "=IF(RC[-2]=""MISSING"",""MISSING"",IF(RC[-2]=RC[-1],""MATCH"",""NOT MATCH""))"
+        
+    Range("AH3").Select
+    Selection.AutoFill Destination:=Range("AH3:AH" & LastRowReport)
+    Range("AH3:AH" & LastRowReport).Select
+    Selection.Copy
+    Application.CutCopyMode = False
+    ActiveWorkbook.Save
+End Sub
+
+Sub set_ClaimStatus()
+'
+' 7.1 call
+'
+
+    'RT Claim Status
+    Columns("AI:AJ").Select
+    Selection.NumberFormat = "General"
+    Range("AI3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-33],RT_Data!C[-33],RT_Data!C[18],""MISSING"",0,1)&"""""
+    Range("AI3").Select
+    Selection.AutoFill Destination:=Range("AI3:AI" & LastRowReport)
+    Range("AI3:AI" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+  
+    'RT Claim Line Status
+    Range("AJ3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-34],RT_Data!C[-34],RT_Data!C[23],""MISSING"",0,1)&"""""
+    Range("AJ3").Select
+    Selection.AutoFill Destination:=Range("AJ3:AJ" & LastRowReport)
+    Range("AJ3:AJ" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    
+    
+End Sub
+
+Sub Set_LesserOflogic()
+'
+' 8th call
+'
+    'Source Allowed Amount
+    Sheets(ReportName).Select
+    Columns("Z:AD").Select
+    Range("Z2").Activate
+    Selection.NumberFormat = "General"
+    Range("Z3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-24],RT_Data!C[-24],RT_Data!C[-11],""MISSING"",0,1)"
+    Range("Z3").Select
+    Selection.AutoFill Destination:=Range("Z3:Z" & LastRowReport)
+    Range("Z3:Z" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Application.CutCopyMode = False
+
+    'R6 Charges Amount
+    Range("AA3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-22],'R6_Data'!C[-25],'R6_Data'!C[-11],""MISSING"",0,1)"
+    Range("AA3").Select
+    Selection.AutoFill Destination:=Range("AA3:AA" & LastRowReport)
+    Range("AA3:AA" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+        
+    'Difference between Source allowed and R6 charges
+    Range("AB3").Select
+    Application.CutCopyMode = False
+
+    ActiveCell.FormulaR1C1 = _
+    "=IF(RC[-2]=""MISSING"",""MISSING"",RC[-2]-RC[-1])"
+    
+    Range("AB3").Select
+    Selection.AutoFill Destination:=Range("AB3:AB" & LastRowReport)
+    Range("AB3:AB" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Application.CutCopyMode = False
+    
+    'lesser of Logic validation
+    Range("AC3").Select
+    Selection.AutoFill Destination:=Range("AC3:AC" & LastRowReport)
+    Range("AC3:AC" & LastRowReport).Select
+    Selection.Copy
+    Application.CutCopyMode = False
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+        
+    ActiveWorkbook.Save
+    
+End Sub
+
+Sub Set_ClaimTypeWithLoB()
+
+' 9th call
+
+    Sheets(ReportName).Select
+    
+    Columns("AK:AO").Select
+    Selection.NumberFormat = "General"
+    
+    'Claim Type [Professional or Institutional]
+    Range("AK3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-35],RT_Data!C[-35],RT_Data!C[44],""MISSING"",0,1)&"""""
+    Range("AK3").Select
+    Selection.AutoFill Destination:=Range("AK3:AK" & LastRowReport)
+    Range("AK3:AK" & LastRowReport).Select
+    
+    'compno
+    Range("AL3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-36],RT_Data!C[-36],RT_Data!C[-21],""MISSING"",0,1)"
+    Range("AL3").Select
+    Selection.AutoFill Destination:=Range("AL3:AL" & LastRowReport)
+    Range("AL3:AL" & LastRowReport).Select
+    
+    'claim type [IN,XN,OP]
+    Range("AM3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-37],RT_Data!C[-37],RT_Data!C[-21],""MISSING"",0,1)"
+    Range("AM3").Select
+    Selection.AutoFill Destination:=Range("AM3:AM" & LastRowReport)
+    Range("AM3:AM" & LastRowReport).Select
+    
+    'place service
+    Range("AN3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-38],RT_Data!C[-38],RT_Data!C[-21],""MISSING"",0,1)"
+    Range("AN3").Select
+    Selection.AutoFill Destination:=Range("AN3:AN" & LastRowReport)
+    Range("AN3:AN" & LastRowReport).Select
+    
+    'ben package
+    Range("AO3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-39],RT_Data!C[-39],RT_Data!C[-21],""MISSING"",0,1)"
+    Range("AO3").Select
+    Selection.AutoFill Destination:=Range("AO3:AO" & LastRowReport)
+    
+    Range("AK3:AK" & LastRowReport).Select
+    Range("AK3:AO3").Select
+    Range(Selection, Selection.End(xlDown)).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Application.CutCopyMode = False
+    
+    ActiveWorkbook.Save
+End Sub
+
+Sub Set_ProviderID()
+'
+' 10th call
+'
+
+'
+    Sheets(ReportName).Select
+    Columns("AP:AV").Select
+    Range("AP2").Activate
+    Selection.NumberFormat = "General"
+    
+    'Provider Id
+    Range("AP3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-40],RT_Data!C[-40],RT_Data!C[-21],""MISSING"",0,1)"
+    Range("AP3").Select
+    Selection.AutoFill Destination:=Range("AP3:AP" & LastRowReport)
+    Range("AP3:AP" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+        
+    'Contract Name
+    Range("AQ3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-42],RT_Data!C[-42],RT_Data!C[-20],""MISSING"",0,1)&"""""
+
+    Application.CutCopyMode = False
+    Selection.AutoFill Destination:=Range("AQ3:AQ" & LastRowReport)
+    Range("AQ3:AQ" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+        
+    'TIN /TAXID
+    Range("AR3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-42],RT_Data!C[-42],RT_Data!C[-20],""MISSING"",0,1)&"""""
+    Application.CutCopyMode = False
+    Selection.AutoFill Destination:=Range("AR3:AR" & LastRowReport)
+    Range("AR3:AR" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Application.CutCopyMode = False
+    
+    'Prov_Specialty_1
+    Range("AT3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-44],RT_Data!C[-44],RT_Data!C[36],""MISSING"",0,1)&"""""
+    Range("AT3").Select
+    Selection.AutoFill Destination:=Range("AT3:AT" & LastRowReport)
+    Range("AT3:AT" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Application.CutCopyMode = False
+
+    'Prov_Specialty_2
+    Range("AU3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-45],RT_Data!C[-45],RT_Data!C[36],""MISSING"",0,1)&"""""
+    Range("AU3").Select
+        Selection.AutoFill Destination:=Range("AU3:AU" & LastRowReport)
+    Range("AU3:AU" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Application.CutCopyMode = False
+    
+    
+    'Prov_Specialty_3
+    Range("AV3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-46],RT_Data!C[-46],RT_Data!C[36],""MISSING"",0,1)&"""""
+    Range("AV3").Select
+    Selection.AutoFill Destination:=Range("AV3:AV" & LastRowReport)
+    Range("AV3:AV" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Application.CutCopyMode = False
+    
+    ActiveWorkbook.Save
+End Sub
+
+Sub Set_AdditionalClaimInfo()
+'
+' 11th Call
+'
+
+    'R6 Provider Id
+    Sheets(ReportName).Select
+    Range("AZ3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-47],'R6_Data'!C[-50],'R6_Data'!C[-31],""MISSING"",0,1)&"""""
+    Selection.AutoFill Destination:=Range("AZ3:AZ" & LastRowReport)
+    Range("AZ3:AZ" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+        
+    'RT Provider Id
+    Range("BA3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-51],RT_Data!C[-51],RT_Data!C[-32],""MISSING"",0,1)&"""""
+    Application.CutCopyMode = False
+    Selection.AutoFill Destination:=Range("BA3:BA" & LastRowReport)
+    Range("BA3:BA" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    'match
+    Range("BB3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=IFERROR(IF(RC[-2]=RC[-1],""Provider matched"",""Provider not matched""),""MISSING"")"
+    Application.CutCopyMode = False
+    Selection.AutoFill Destination:=Range("BB3:BB" & LastRowReport)
+    Range("BB3:BB" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    
+    'copay
+    Range("BC3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-50],'R6_Data'!C[-53],'R6_Data'!C[-28],""MISSING"",0,1)&"""""
+    Application.CutCopyMode = False
+    Selection.AutoFill Destination:=Range("BC3:BC" & LastRowReport)
+    Range("BC3:BC" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    
+    'OOP Amt
+    Range("BD3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-51],'R6_Data'!C[-54],'R6_Data'!C[-27],""MISSING"",0,1)&"""""
+    Application.CutCopyMode = False
+    Selection.AutoFill Destination:=Range("BD3:BD" & LastRowReport)
+    Range("BD3:BD" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    
+    'Service Code
+    Range("BE3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-52],'R6_Data'!C[-55],'R6_Data'!C[-52],""MISSING"",0,1)&"""""
+    Application.CutCopyMode = False
+    Selection.AutoFill Destination:=Range("BE3:BE" & LastRowReport)
+    Range("BE3:BE" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    
+    'Modifier
+    Range("BF3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-53],'R6_Data'!C[-56],'R6_Data'!C[-26],""MISSING"",0,1)&"""""
+    Application.CutCopyMode = False
+    Selection.AutoFill Destination:=Range("BF3:BF" & LastRowReport)
+    Range("BF3:BF" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Application.CutCopyMode = False
+    
+    ActiveWorkbook.Save
+End Sub
+
+Sub Set_RT_HoldCodeColumns()
+'
+' 12th call
+
+
+    Sheets(ReportName).Select
+    
+    'RT_All hold codes
+    Range("BG3").Select
+    ActiveCell.FormulaR1C1 = "=RC[-32]"
+    Selection.AutoFill Destination:=Range("BG3:BG" & LastRowReport)
+    Range("BG3:BG" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+        
+
+'    Range("BG3").Select
+'    Application.CutCopyMode = False
+'    ActiveCell.FormulaR1C1 = _
+'        "=XLOOKUP(RC[-1],'RT_Data'!C[-48],'RT_Data'!C[-43],""MISSING"",0,1)&"""""
+'    Selection.AutoFill Destination:=Range("BG3:BG" & LastRowReport)
+'    Range("BG3:BG" & LastRowReport).Select
+'    Selection.Copy
+'    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+'        :=False, Transpose:=False
+        
+    'RT_HD1 Code
+    Range("BH3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-58],'RT_Data'!C[-58],'RT_Data'!C[-52],""MISSING"",0,1)&"""""
+    Application.CutCopyMode = False
+    Selection.AutoFill Destination:=Range("BH3:BH" & LastRowReport)
+    Range("BH3:BH" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+        
+    'RT_HD1 Desc
+    Range("BI3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-59],'RT_Data'!C[-59],'RT_Data'!C[-22],""MISSING"",0,1)&"""""
+    Application.CutCopyMode = False
+    Selection.AutoFill Destination:=Range("BI3:BI" & LastRowReport)
+    Range("BI3:BI" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+        
+    'RT_HD1 Src
+    Range("BJ3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-60],'RT_Data'!C[-60],'RT_Data'!C[-17],""MISSING"",0,1)&"""""
+    Application.CutCopyMode = False
+    Selection.AutoFill Destination:=Range("BJ3:BJ" & LastRowReport)
+    Range("BJ3:BJ" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+        
+    'RT_HD2 Code
+    Range("BK3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-61],'RT_Data'!C[-61],'RT_Data'!C[-54],""MISSING"",0,1)&"""""
+    Application.CutCopyMode = False
+    Selection.AutoFill Destination:=Range("BK3:BK" & LastRowReport)
+    Range("BK3:BK" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+        
+    'RT_HD2 Desc
+    Range("BL3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-62],'RT_Data'!C[-62],'RT_Data'!C[-24],""MISSING"",0,1)&"""""
+    Application.CutCopyMode = False
+    Selection.AutoFill Destination:=Range("BL3:BL" & LastRowReport)
+    Range("BL3:BL" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+        
+    'RT_HD2 Src
+    Range("BM3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-63],'RT_Data'!C[-63],'RT_Data'!C[-19],""MISSING"",0,1)&"""""
+    Application.CutCopyMode = False
+    Selection.AutoFill Destination:=Range("BM3:BM" & LastRowReport)
+    Range("BM3:BM" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+        
+    'RT_HD3 Code
+    Range("BN3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-64],'RT_Data'!C[-64],'RT_Data'!C[-56],""MISSING"",0,1)&"""""
+    Application.CutCopyMode = False
+    Selection.AutoFill Destination:=Range("BN3:BN" & LastRowReport)
+    Range("BN3:BN" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    
+    'RT_HD3 Desc
+    Range("BO3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-65],'RT_Data'!C[-65],'RT_Data'!C[-26],""MISSING"",0,1)&"""""
+    Application.CutCopyMode = False
+    Selection.AutoFill Destination:=Range("BO3:BO" & LastRowReport)
+    Range("BO3:BO" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    
+    'RT_HD3 Src
+    Range("BP3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-66],'RT_Data'!C[-66],'RT_Data'!C[-21],""MISSING"",0,1)&"""""
+    Application.CutCopyMode = False
+    Selection.AutoFill Destination:=Range("BP3:BP" & LastRowReport)
+    Range("BP3:BP" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    
+    'RT_HD4 Code
+    Range("BQ3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-67],'RT_Data'!C[-67],'RT_Data'!C[-58],""MISSING"",0,1)&"""""
+    Application.CutCopyMode = False
+    Selection.AutoFill Destination:=Range("BQ3:BQ" & LastRowReport)
+    Range("BQ3:BQ" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    
+    'RT_HD4 Desc
+    Range("BR3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-68],'RT_Data'!C[-68],'RT_Data'!C[-28],""MISSING"",0,1)&"""""
+    Application.CutCopyMode = False
+    Selection.AutoFill Destination:=Range("BR3:BR" & LastRowReport)
+    Range("BR3:BR" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    
+    'RT_HD4 Src
+    Range("BS3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-69],'RT_Data'!C[-69],'RT_Data'!C[-23],""MISSING"",0,1)&"""""
+    Application.CutCopyMode = False
+    Selection.AutoFill Destination:=Range("BS3:BS" & LastRowReport)
+    Range("BS3:BS" & LastRowReport).Select
+    Selection.Copy
+    Range("BS3").Select
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    
+    'RT_HD5 Code
+    Range("BT3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-70],'RT_Data'!C[-70],'RT_Data'!C[-60],""MISSING"",0,1)&"""""
+    Application.CutCopyMode = False
+    Selection.AutoFill Destination:=Range("BT3:BT" & LastRowReport)
+    Range("BT3:BT" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    
+    'RT_HD5 Desc
+    Range("BU3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-71],'RT_Data'!C[-71],'RT_Data'!C[-30],""MISSING"",0,1)&"""""
+    Application.CutCopyMode = False
+    Selection.AutoFill Destination:=Range("BU3:BU" & LastRowReport)
+    Range("BU3:BU" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    
+    'RT_HD5 Src
+    Range("BV3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-72],'RT_Data'!C[-72],'RT_Data'!C[-25],""MISSING"",0,1)&"""""
+    Application.CutCopyMode = False
+    Selection.AutoFill Destination:=Range("BV3:BV" & LastRowReport)
+    Range("BV3:BV" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    
+    'RT_HD6 Code
+    Range("BW3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-73],'RT_Data'!C[-73],'RT_Data'!C[-62],""MISSING"",0,1)&"""""
+    Application.CutCopyMode = False
+    Selection.AutoFill Destination:=Range("BW3:BW" & LastRowReport)
+    Range("BW3:BW" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    
+    'RT_HD6 Desc
+    Range("BX3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-74],'RT_Data'!C[-74],'RT_Data'!C[-32],""MISSING"",0,1)&"""""
+    Application.CutCopyMode = False
+    Selection.AutoFill Destination:=Range("BX3:BX" & LastRowReport)
+    Range("BX3:BX" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    
+    'RT_HD6 Src
+    Range("BY3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-75],'RT_Data'!C[-75],'RT_Data'!C[-27],""MISSING"",0,1)&"""""
+    Application.CutCopyMode = False
+    Selection.AutoFill Destination:=Range("BY3:BY" & LastRowReport)
+    Range("BY3:BY" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+        
+    Application.CutCopyMode = False
+    ActiveWorkbook.Save
+End Sub
+
+
+Sub Set_R6_HoldCodeColumns()
+'
+' 13th call
+
+    Sheets(ReportName).Select
+    
+    'R6_Claim with Line number
+'    Range("BQ3").Select
+'    ActiveCell.FormulaR1C1 = "=RC[-64]"
+'    Selection.AutoFill Destination:=Range("BQ3:BQ" & LastRowReport)
+'    Range("BQ3:BQ" & LastRowReport).Select
+'    Selection.Copy
+'    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+'        :=False, Transpose:=False
+        
+    'R6_All hold codes
+'    Range("BR3").Select
+'         ActiveCell.FormulaR1C1 = _
+'        "=XLOOKUP(RC[-1],'R6_Data'!C[-68],'R6_Data'!C[-63],""MISSING"",0,1)&"""""
+'    Selection.AutoFill Destination:=Range("BR3:BR" & LastRowReport)
+'    Range("BR3:BR" & LastRowReport).Select
+'    Selection.Copy
+'    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+'        :=False, Transpose:=False
+    
+        
+    'R6_HD1 Code
+    Range("CA3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-74],'R6_Data'!C[-77],'R6_Data'!C[-71],""MISSING"",0,1)&"""""
+    Application.CutCopyMode = False
+    Selection.AutoFill Destination:=Range("CA3:CA" & LastRowReport)
+    Range("CA3:CA" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+        
+    'R6_HD1 Desc
+    Range("CB3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-75],'R6_Data'!C[-78],'R6_Data'!C[-41],""MISSING"",0,1)&"""""
+    Application.CutCopyMode = False
+    Selection.AutoFill Destination:=Range("CB3:CB" & LastRowReport)
+    Range("CB3:CB" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+        
+    'R6_HD1 Src
+    Range("CC3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-76],'R6_Data'!C[-79],'R6_Data'!C[-36],""MISSING"",0,1)&"""""
+    Application.CutCopyMode = False
+    Selection.AutoFill Destination:=Range("CC3:CC" & LastRowReport)
+    Range("CC3:CC" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+        
+    'R6_HD2 Code
+    Range("CD3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-77],'R6_Data'!C[-80],'R6_Data'!C[-73],""MISSING"",0,1)&"""""
+    Application.CutCopyMode = False
+    Selection.AutoFill Destination:=Range("CD3:CD" & LastRowReport)
+    Range("CD3:CD" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+        
+    'R6_HD2 Desc
+    Range("CE3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-78],'R6_Data'!C[-81],'R6_Data'!C[-43],""MISSING"",0,1)&"""""
+    Application.CutCopyMode = False
+    Selection.AutoFill Destination:=Range("CE3:CE" & LastRowReport)
+    Range("CE3:CE" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+        
+    'R6_HD2 Src
+    Range("CF3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-79],'R6_Data'!C[-82],'R6_Data'!C[-38],""MISSING"",0,1)&"""""
+    Application.CutCopyMode = False
+    Selection.AutoFill Destination:=Range("CF3:CF" & LastRowReport)
+    Range("CF3:CF" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+        
+    'R6_HD3 Code
+    Range("CG3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-80],'R6_Data'!C[-83],'R6_Data'!C[-73],""MISSING"",0,1)&"""""
+    Application.CutCopyMode = False
+    Selection.AutoFill Destination:=Range("CG3:CG" & LastRowReport)
+    Range("CG3:CG" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    
+    'R6_HD3 Desc
+    Range("CH3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-81],'R6_Data'!C[-84],'R6_Data'!C[-45],""MISSING"",0,1)&"""""
+    Application.CutCopyMode = False
+    Selection.AutoFill Destination:=Range("CH3:CH" & LastRowReport)
+    Range("CH3:CH" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    
+    'R6_HD3 Src
+    Range("CI3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-82],'R6_Data'!C[-85],'R6_Data'!C[-40],""MISSING"",0,1)&"""""
+    Application.CutCopyMode = False
+    Selection.AutoFill Destination:=Range("CI3:CI" & LastRowReport)
+    Range("CI3:CI" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    
+    'R6_HD4 Code
+    Range("CJ3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-83],'R6_Data'!C[-86],'R6_Data'!C[-77],""MISSING"",0,1)&"""""
+    Application.CutCopyMode = False
+    Selection.AutoFill Destination:=Range("CJ3:CJ" & LastRowReport)
+    Range("CJ3:CJ" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    
+    'R6_HD4 Desc
+    Range("CK3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-84],'R6_Data'!C[-87],'R6_Data'!C[-47],""MISSING"",0,1)&"""""
+    Application.CutCopyMode = False
+    Selection.AutoFill Destination:=Range("CK3:CK" & LastRowReport)
+    Range("CK3:CK" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    
+    'R6_HD4 Src
+    Range("CL3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-85],'R6_Data'!C[-88],'R6_Data'!C[-42],""MISSING"",0,1)&"""""
+    Application.CutCopyMode = False
+    Selection.AutoFill Destination:=Range("CL3:CL" & LastRowReport)
+    Range("CL3:CL" & LastRowReport).Select
+    Selection.Copy
+    Range("CL3").Select
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    
+    'R6_HD5 Code
+    Range("CM3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-86],'R6_Data'!C[-89],'R6_Data'!C[-79],""MISSING"",0,1)&"""""
+    Application.CutCopyMode = False
+    Selection.AutoFill Destination:=Range("CM3:CM" & LastRowReport)
+    Range("CM3:CM" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    
+    'R6_HD5 Desc
+    Range("CN3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-87],'R6_Data'!C[-90],'R6_Data'!C[-49],""MISSING"",0,1)&"""""
+    Application.CutCopyMode = False
+    Selection.AutoFill Destination:=Range("CN3:CN" & LastRowReport)
+    Range("CN3:CN" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    
+    'R6_HD5 Src
+    Range("CO3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-88],'R6_Data'!C[-91],'R6_Data'!C[-44],""MISSING"",0,1)&"""""
+    Application.CutCopyMode = False
+    Selection.AutoFill Destination:=Range("CO3:CO" & LastRowReport)
+    Range("CO3:CO" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    
+    'R6_HD6 Code
+    Range("CP3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-89],'R6_Data'!C[-92],'R6_Data'!C[-81],""MISSING"",0,1)&"""""
+    Application.CutCopyMode = False
+    Selection.AutoFill Destination:=Range("CP3:CP" & LastRowReport)
+    Range("CP3:CP" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    
+    'R6_HD6 Desc
+    Range("CQ3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-90],'R6_Data'!C[-93],'R6_Data'!C[-51],""MISSING"",0,1)&"""""
+    Application.CutCopyMode = False
+    Selection.AutoFill Destination:=Range("CQ3:CQ" & LastRowReport)
+    Range("CQ3:CQ" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    
+    'R6_HD6 Src
+    Range("CR3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=XLOOKUP(RC[-91],'R6_Data'!C[-94],'R6_Data'!C[-46],""MISSING"",0,1)&"""""
+    Application.CutCopyMode = False
+    Selection.AutoFill Destination:=Range("CR3:CR" & LastRowReport)
+    Range("CR3:CR" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+        
+    Application.CutCopyMode = False
+    
+    
+    
+    
+    
+    ActiveWorkbook.Save
+End Sub
+
+Sub Set_Variance()
+'
+' 13.5 th call
+
+'''=IF(B3="MISSING","Claim not found in RT",
+'''IF(C3="MISSING","Claim line not found in RT",
+'''IF(OR(ISERROR(AY3)),"Additional claim lines in Prod - (Provider not assigned in RT)",
+'''IF(OR(TRIM(AY3)="NPI",TRIM(AY3)="NOT ON FILE",TRIM(AY3)="NO CONTRACT"),"Provider not assigned in Pprod",
+'''IF(OR(TRIM(AX3)="NPI",TRIM(AX3)="NOT ON FILE",TRIM(AX3)="NO CONTRACT"),"Provider not assigned in R6",
+'''IF(AND(AV3="E",VALUE(AU3)=0,VALUE(K3)<>0),"Claim lines errored out from source",
+'''IF(AND(ISERROR(L3),VALUE(AU3)=0,VALUE(K3)<>0),"Source allowed amount = 0",
+'''IF(AND(VALUE(I3)<>VALUE(AU3),VALUE(I3)=0,VALUE(K3)<>0),"Source allowed amount overriden to 0",
+'''IF(VALUE(I3)=VALUE(J3),"Claim lines with No Variance (0 Variance)",
+'''IF(OR(ROUND(VALUE(L3),2)>=0.1,ROUND(VALUE(L3),2)<=-0.1),"claims with >= 10 % variance",
+'''IF(AND(ROUND(ABS(VALUE(L3)),2)>=0.02,ROUND(ABS(VALUE(L3)),2)<1),"Claim lines with  >= 2 % and < 10 % variance",
+'''IF(AND(ROUND(ABS(VALUE(L3)),2)<=0.01,ROUND(ABS(VALUE(K3)),2)<=10),"Claim with Acceptable Variance (<=1% AND <=$10 )","HELLO"))))))))))))
+'''
+'Variance
+    Sheets(ReportName).Select
+    Range("M3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=IF(RC[-11]=""MISSING"",""Claim not found in RT""," & Chr(10) & "IF(RC[-10]=""MISSING"",""Claim line not found in RT""," & Chr(10) & "IF(OR(ISERROR(RC[38])),""Additional claim lines in Prod - (Provider not assigned in RT)""," & Chr(10) & "IF(OR(TRIM(RC[38])=""NPI"",TRIM(RC[38])=""NOT ON FILE"",TRIM(RC[38])=""NO CONTRACT""),""Provider not assigned in Pprod""," & Chr(10) & "IF(OR(TRIM(RC[37])=""NPI"",TRIM(RC[37])=""NOT ON " & _
+        "FILE"",TRIM(RC[37])=""NO CONTRACT""),""Provider not assigned in R6""," & Chr(10) & "IF(AND(RC[35]=""E"",VALUE(RC[34])=0,VALUE(RC[-2])<>0),""Claim lines errored out from source""," & Chr(10) & "IF(AND(ISERROR(RC[-1]),VALUE(RC[34])=0,VALUE(RC[-2])<>0),""Source allowed amount = 0""," & Chr(10) & "IF(AND(VALUE(RC[-4])<>VALUE(RC[34]),VALUE(RC[-4])=0,VALUE(RC[-2])<>0),""Source allowed amount overriden to 0""," & Chr(10) & "IF(" & _
+        "VALUE(RC[-4])=VALUE(RC[-3]),""Claim lines with No Variance (0 Variance)""," & Chr(10) & "IF(OR(ROUND(VALUE(RC[-1]),2)>=0.1,ROUND(VALUE(RC[-1]),2)<=-0.1),""claims with >= 10 % variance""," & Chr(10) & "IF(AND(ROUND(ABS(VALUE(RC[-1])),2)>=0.02,ROUND(ABS(VALUE(RC[-1])),2)<1),""Claim lines with  >= 2 % and < 10 % variance""," & Chr(10) & "IF(AND(ROUND(ABS(VALUE(RC[-1])),2)<=0.01,ROUND(ABS(VALUE(RC[-2])),2)<=10)" & _
+        ",""Claim with Acceptable Variance (<=1% AND <=$10 )"",""HELLO""))))))))))))" & _
+        ""
+    Range("M3").Select
+    Selection.AutoFill Destination:=Range("M3:M" & LastRowReport)
+    Range("M3:M" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Application.CutCopyMode = False
+    
+'source allowed amount override status
+    Range("N3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=IF(RC[-5]=RC[33],""Source Allowed amount applied"","" Source allowed amount overriden"")"
+    Range("N3").Select
+    Selection.AutoFill Destination:=Range("N3:N" & LastRowReport)
+    Range("N3:N" & LastRowReport).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Application.CutCopyMode = False
+End Sub
+
