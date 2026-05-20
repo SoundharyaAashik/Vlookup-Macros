@@ -1,0 +1,2 @@
+<eb1>SQL0104 - Token , was not valid. Valid tokens: FROM INTO.
+State:37000,Native:-104,Origin:[IBM][System i Access ODBC Driver][DB2 for i5/OS]</eb1>
